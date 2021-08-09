@@ -5,20 +5,19 @@
   "main": "index.js",
   "scripts": {
     "setup": "npm install && npm run flow-typed",
-    "lint": "eslint src/ test/ *.js",
-    "flow-typed": "flow-typed install",
-    "flow": "flow",
+    "lint": "eslint --ext ts,tsx,js,jsx src/ test/",
+    "tsc": "tsc",
     "karma": "cross-env NODE_ENV=test babel-node --plugins=transform-es2015-modules-commonjs ./node_modules/.bin/karma start",
     "babel": "babel src/ --out-dir dist/module",
     "webpack": "babel-node --plugins=transform-es2015-modules-commonjs ./node_modules/.bin/webpack --progress",
-    "test": "npm run lint && npm run flow-typed && npm run flow && npm run karma",
+    "test": "npm run lint && npm run tsc && npm run karma",
     "build": "npm run test && npm run babel && npm run webpack",
     "release": "./publish.sh",
     "release:patch": "./publish.sh patch",
     "release:minor": "./publish.sh minor",
     "release:major": "./publish.sh major",
     "clean": "rimraf dist coverage",
-    "reinstall": "rimraf flow-typed && rimraf node_modules && npm install && flow-typed install",
+    "reinstall": "rimraf node_modules && npm install",
     "debug": "cross-env NODE_ENV=debug"
   },
   "files": [
@@ -44,9 +43,12 @@
   "license": "Apache-2.0",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "flow-bin": "0.155.0",
+    "@types/node": "^16.4.13",
+    "@typescript-eslint/eslint-plugin": "^4.29.0",
+    "@typescript-eslint/parser": "^4.29.0",
     "grumbler-scripts": "^3",
-    "mocha": "^4"
+    "mocha": "^4",
+    "typescript": "^4.3.5"
   },
   "dependencies": {
     "cross-domain-safe-weakmap": "^1",
