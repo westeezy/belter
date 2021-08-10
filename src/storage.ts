@@ -1,7 +1,8 @@
 import { uniqueID, getGlobal, inlineMemoize } from './util';
 import { isLocalStorageEnabled } from './dom';
 
-type Getter<T> = <T>(handler: (arg0: Record<string, any>) => T) => T;
+type Getter<T> = (handler: (arg0: Record<string, any>) => T) => T;
+
 export type Storage = {
     getState: Getter<any>;
     getID: () => string;
@@ -20,7 +21,7 @@ export function getStorage({
     return inlineMemoize(getStorage, () => {
         const STORAGE_KEY = `__${ name }_storage__`;
         const newStateID = uniqueID();
-        let accessedStorage: WindowLocalStorage | null;
+        let accessedStorage: WindowLocalStorage | null; // eslint-disable-line no-undef
 
         function getState<T>(handler: (storage: Record<string, any>) => T): T {
             const localStorageEnabled = isLocalStorageEnabled();

@@ -1,7 +1,7 @@
 /* eslint max-lines: off */
 import { ZalgoPromise } from 'zalgo-promise';
 import type { SameDomainWindowType, CrossDomainWindowType } from 'cross-domain-utils';
-import { linkFrameWindow, isWindowClosed, assertSameDomain } from 'cross-domain-utils';
+import { linkFrameWindow, isWindowClosed, assertSameDomain } from 'cross-domain-utils'; // eslint-disable-line no-duplicate-imports
 import { WeakMap } from 'cross-domain-safe-weakmap';
 
 import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, strHashStr } from './util';
@@ -165,6 +165,7 @@ export function extendUrl(url: string, options: {
 export function redirect(url: string, win: CrossDomainWindowType = window): ZalgoPromise<void> {
     // @ts-upgrade TODO: - Need to get in zalgo promise defs
     return new ZalgoPromise((resolve: Function) => {
+        // @ts-ignore
         win.location = url;
 
         if (!urlWillRedirectPage(url)) {
@@ -220,7 +221,7 @@ export function isBrowser(): boolean {
 export function querySelectorAll(selector: string, doc: HTMLDocument = window.document): ReadonlyArray<HTMLElement> {
     return Array.prototype.slice.call(doc.querySelectorAll(selector));
 }
-export function onClick(element: HTMLElement, handler: (arg0: Event) => void) {
+export function onClick(element: HTMLElement, handler: (arg0: Event) => void): void {
     element.addEventListener('touchstart', noop);
     element.addEventListener('click', handler);
     element.addEventListener('keypress', (event: Event) => {
@@ -241,7 +242,6 @@ export function getScript({
 }): HTMLScriptElement | null | undefined {
     return inlineMemoize(getScript, (): HTMLScriptElement | null | undefined => {
         const url = `${ host }${ path }`;
-        // $FlowFixMe[method-unbinding]
         const scripts = Array.prototype.slice.call(document.getElementsByTagName('script'));
 
         if (reverse) {
@@ -320,14 +320,15 @@ export function getBrowserLocales(): Array<{
         return null;
     }).filter(Boolean);
 }
-export function appendChild(container: HTMLElement, child: HTMLElement | Text) {
+export function appendChild(container: HTMLElement, child: HTMLElement | Text): void {
     container.appendChild(child);
 }
-export function isElement(element: any): boolean {
+export function isElement(element: unknown): boolean {
     if (element instanceof window.Element) {
         return true;
     }
 
+    // @ts-ignore
     if (element !== null && typeof element === 'object' && element.nodeType === 1 && typeof element.style === 'object' && typeof element.ownerDocument === 'object') {
         return true;
     }
@@ -398,7 +399,6 @@ type PopupOptions = {
     scrollbars?: 0 | 1;
 };
 export function popup(url: string, options?: PopupOptions): CrossDomainWindowType {
-    // $FlowFixMe
     options = options || {};
     const {
         width,
@@ -451,7 +451,7 @@ export function popup(url: string, options?: PopupOptions): CrossDomainWindowTyp
     let win: Window | null;
 
     try {
-        win = window.open(url, name, params);
+        win = window.open(url, name, params) as Window;
     } catch (err) {
         throw new PopupOpenError(`Can not open popup window - ${ err.stack || err.message }`);
     }
@@ -464,19 +464,20 @@ export function popup(url: string, options?: PopupOptions): CrossDomainWindowTyp
     window.addEventListener('unload', () => win?.close());
     return win;
 }
-export function writeToWindow(win: SameDomainWindowType, html: string) {
+export function writeToWindow(win: SameDomainWindowType, html: string): void {
     try {
         win.document.open();
         win.document.write(html);
         win.document.close();
     } catch (err) {
         try {
+            // @ts-ignore
             win.location = `javascript: document.open(); document.write(${ JSON.stringify(html) }); document.close();`;
         } catch (err2) { // pass
         }
     }
 }
-export function writeElementToWindow(win: SameDomainWindowType, el: HTMLElement) {
+export function writeElementToWindow(win: SameDomainWindowType, el: HTMLElement): void {
     const tag = el.tagName.toLowerCase();
 
     if (tag !== 'html') {
@@ -485,16 +486,19 @@ export function writeElementToWindow(win: SameDomainWindowType, el: HTMLElement)
 
     const documentElement = win.document.documentElement;
 
+    // @ts-ignore
     for (const child of arrayFrom(documentElement.children)) {
+        // @ts-ignore
         documentElement.removeChild(child);
     }
 
     // @ts-ignore - HTMLCollection not assignable to unknown
     for (const child of arrayFrom(el.children)) {
+        // @ts-ignore
         documentElement.appendChild(child);
     }
 }
-export function setStyle(el: HTMLElement, styleText: string, doc: Document = window.document) {
+export function setStyle(el: HTMLElement, styleText: string, doc: Document = window.document): void {
     // @ts-ignore
     if (el.styleSheet) {
         // @ts-ignore
@@ -612,24 +616,20 @@ export type IframeElementOptionsType = {
 };
 
 const getDefaultIframeOptions = (): IframeElementOptionsType => {
-    // $FlowFixMe
     return {};
 };
 
 const getDefaultStringMap = (): StringMap => {
-    // $FlowFixMe
     return {};
 };
 
-export function iframe(options: IframeElementOptionsType = getDefaultIframeOptions(), container: HTMLElement | null | undefined): HTMLIFrameElement {
+export function iframe(options: IframeElementOptionsType = getDefaultIframeOptions(), container: HTMLElement | null | undefined): HTMLIFrameElement { // eslint-disable-line default-param-last
     const attributes = options.attributes || getDefaultStringMap();
     const style = options.style || getDefaultStringMap();
-    // $FlowFixMe
     const newAttributes = {
         allowTransparency: 'true',
         ...attributes
     };
-    // $FlowFixMe
     const newStyle = {
         backgroundColor: 'transparent',
         border:          'none',
@@ -663,7 +663,7 @@ export function iframe(options: IframeElementOptionsType = getDefaultIframeOptio
     // @ts-ignore
     return frame;
 }
-export function addEventListener(obj: HTMLElement, event: string, handler: (event: Event) => void): CancelableType {
+export function addEventListener(obj: HTMLElement, event: string, handler: (event: Event) => void): CancelableType { // eslint-disable-line no-shadow
     obj.addEventListener(event, handler);
     return {
         cancel() {
@@ -688,7 +688,7 @@ export function bindEvents(element: HTMLElement, eventNames: ReadonlyArray<strin
     };
 }
 const VENDOR_PREFIXES = [ 'webkit', 'moz', 'ms', 'o' ];
-export function setVendorCSS(element: HTMLElement, name: string, value: string) {
+export function setVendorCSS(element: HTMLElement, name: string, value: string): void {
     // @ts-ignore
     element.style[name] = value;
     const capitalizedName = capitalizeFirstLetter(name);
@@ -769,19 +769,19 @@ export function animate(element: ElementRefType, name: string, clean: (arg0: (..
         }
     });
 }
-export function makeElementVisible(element: HTMLElement) {
+export function makeElementVisible(element: HTMLElement): void {
     element.style.setProperty('visibility', '');
 }
-export function makeElementInvisible(element: HTMLElement) {
+export function makeElementInvisible(element: HTMLElement): void {
     element.style.setProperty('visibility', 'hidden', 'important');
 }
-export function showElement(element: HTMLElement) {
+export function showElement(element: HTMLElement): void {
     element.style.setProperty('display', '');
 }
-export function hideElement(element: HTMLElement) {
+export function hideElement(element: HTMLElement): void {
     element.style.setProperty('display', 'none', 'important');
 }
-export function destroyElement(element: HTMLElement) {
+export function destroyElement(element: HTMLElement): void {
     if (element && element.parentNode) {
         element.parentNode.removeChild(element);
     }
@@ -796,10 +796,10 @@ export function animateAndHide(element: HTMLElement, name: string, clean: (arg0:
         hideElement(element);
     });
 }
-export function addClass(element: HTMLElement, name: string) {
+export function addClass(element: HTMLElement, name: string): void {
     element.classList.add(name);
 }
-export function removeClass(element: HTMLElement, name: string) {
+export function removeClass(element: HTMLElement, name: string): void {
     element.classList.remove(name);
 }
 export function isElementClosed(el: HTMLElement): boolean {
@@ -876,7 +876,9 @@ export function watchElementForClose(element: HTMLElement, handler: () => unknow
     sacrificialFrame = document.createElement('iframe');
     sacrificialFrame.setAttribute('name', `__detect_close_${ uniqueID() }__`);
     sacrificialFrame.style.display = 'none';
+    // @ts-ignore
     awaitFrameWindow(sacrificialFrame).then((frameWin: HTMLIFrameElement) => {
+        // @ts-ignore
         sacrificialFrameWin = assertSameDomain(frameWin);
         sacrificialFrameWin.addEventListener('unload', elementClosed);
     });
@@ -894,7 +896,7 @@ export function watchElementForClose(element: HTMLElement, handler: () => unknow
         cancel
     };
 }
-export function fixScripts(el: HTMLElement, doc: Document = window.document) {
+export function fixScripts(el: HTMLElement, doc: Document = window.document): void {
     // @ts-ignore - querySelectorAll takes a document not element
     for (const script of querySelectorAll('script', el)) {
         const parentNode = script.parentNode;
@@ -957,11 +959,15 @@ export function onResize(el: HTMLElement, handler: (arg0: {
     let timeout: CancelableType;
     win.addEventListener('resize', check);
 
+    // @ts-ignore
     if (typeof win.ResizeObserver !== 'undefined') {
+        // @ts-ignore
         observer = new win.ResizeObserver(check);
         observer.observe(el);
         timeout = safeInterval(check, interval * 10);
+        // @ts-ignore
     } else if (typeof win.MutationObserver !== 'undefined') {
+        // @ts-ignore
         observer = new win.MutationObserver(check);
         observer.observe(el, {
             attributes:    true,
@@ -1050,7 +1056,7 @@ export function insertShadowSlot(element: HTMLElement): HTMLElement {
 
     return slotProvider;
 }
-export function preventClickFocus(el: HTMLElement) {
+export function preventClickFocus(el: HTMLElement): void {
     const onFocus = (event: Event) => {
         el.removeEventListener('focus', onFocus);
         event.preventDefault();

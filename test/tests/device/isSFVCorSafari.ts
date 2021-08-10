@@ -1,6 +1,6 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
-
 /* eslint-disable max-nested-callbacks */
+
 import { isSFVCorSafari } from '../../../src/device';
 import { iPhoneScreenHeightMatrix } from '../../../src/screenHeights';
 

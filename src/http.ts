@@ -1,6 +1,5 @@
 import { ZalgoPromise } from 'zalgo-promise';
 import type { SameDomainWindowType } from 'cross-domain-utils';
-import 'cross-domain-utils';
 
 type RequestOptionsType = {
     url: string;
@@ -72,6 +71,7 @@ export function request({
             }
         }
 
+        // @ts-ignore
         const xhr = new win.XMLHttpRequest();
         xhr.addEventListener('load', function xhrLoad(): void {
             // @ts-ignore no annotation for this
@@ -132,6 +132,6 @@ export function request({
         xhr.send(body);
     });
 }
-export function addHeaderBuilder(method: () => Record<string, string>) {
+export function addHeaderBuilder(method: () => Record<string, string>): void {
     headerBuilders.push(method);
 }

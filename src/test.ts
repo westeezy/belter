@@ -2,10 +2,9 @@ import { ZalgoPromise } from 'zalgo-promise';
 
 import { noop, tryCatch, removeFromArray } from './util';
 
-type Prom<X> = Promise<X> | ZalgoPromise<X>; // eslint-disable-line no-restricted-globals, promise/no-native
+type Prom<X> = Promise<X> | ZalgoPromise<X>;
 
-type Handler = <T, A extends ReadonlyArray<unknown>>(name: string, fn?: (...args: A) => T) => (...args: A) => T; // eslint-disable-line no-undef
-
+type Handler = <T, A extends ReadonlyArray<unknown>>(name: string, fn?: (...args: A) => T) => (...args: A) => T;
 type Wrapper<T> = (arg0: {
     expect: Handler;
     avoid: Handler;
