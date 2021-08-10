@@ -10,7 +10,7 @@ export declare function urlEncode(str: string): string;
 export declare function waitForWindowReady(): ZalgoPromise<void>;
 declare type WaitForDocumentReady = () => ZalgoPromise<void>;
 export declare const waitForDocumentReady: WaitForDocumentReady;
-export declare function waitForDocumentBody(): ZalgoPromise<HTMLBodyElement>;
+export declare function waitForDocumentBody(): ZalgoPromise<HTMLElement | HTMLBodyElement>;
 export declare function parseQuery(queryString: string): Record<string, any>;
 export declare function getQueryParam(name: string): string;
 export declare function urlWillRedirectPage(url: string): boolean;

@@ -1,4 +1,4 @@
-import { ZalgoPromise } from 'zalgo-promise/src';
+import { ZalgoPromise } from 'zalgo-promise';
 import type { CancelableType } from './types';
 export declare function getFunctionName<T extends (...args: Array<any>) => any>(fn: T): string;
 export declare function setFunctionName<T extends (...args: Array<any>) => any>(fn: T, name: string): T;

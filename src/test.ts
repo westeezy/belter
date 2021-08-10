@@ -1,4 +1,4 @@
-import { ZalgoPromise } from 'zalgo-promise/src';
+import { ZalgoPromise } from 'zalgo-promise';
 
 import { noop, tryCatch, removeFromArray } from './util';
 
@@ -26,7 +26,6 @@ export function wrapPromise<T>(method: Wrapper<T>, {
         name: string;
         promise: ZalgoPromise<any>;
     }> = [];
-    // @ts-upgrade TODO zalgo promise types
     return new ZalgoPromise((resolve: Function, reject: Function) => {
         const timer = setTimeout(() => {
             if (expected.length) {
@@ -116,7 +115,7 @@ export function wrapPromise<T>(method: Wrapper<T>, {
             };
         };
 
-        const wait = () => {
+        const wait = (): any => {
             return ZalgoPromise.try(() => {
                 if (promises.length) {
                     const prom = promises[0];

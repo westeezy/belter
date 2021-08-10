@@ -1,5 +1,5 @@
 /* eslint max-lines: 0 */
-import { ZalgoPromise } from 'zalgo-promise/src';
+import { ZalgoPromise } from 'zalgo-promise';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 import type { CancelableType } from './types';
@@ -110,9 +110,9 @@ export function getEmptyObject(): Record<string, undefined> {
     return {};
 }
 type MemoizeOptions = {
-  name?: string;
-  time?: number;
-  thisNamespace?: boolean;
+    name?: string;
+    time?: number;
+    thisNamespace?: boolean;
 };
 
 const getDefaultMemoizeOptions = (): MemoizeOptions => {
@@ -120,7 +120,7 @@ const getDefaultMemoizeOptions = (): MemoizeOptions => {
 };
 
 export type Memoized<F> = F & {
-  reset: () => void;
+    reset: () => void;
 };
 let memoizeGlobalIndex = 0;
 let memoizeGlobalIndexValidFrom = 0;
@@ -216,7 +216,7 @@ export function memoizePromise<R>(method: (...args: ReadonlyArray<any>) => Zalgo
     return setFunctionName(memoizedPromiseFunction, `${ getFunctionName(method) }::promiseMemoized`);
 }
 type PromisifyOptions = {
-  name?: string;
+    name?: string;
 };
 
 const getDefaultPromisifyOptions = (): PromisifyOptions => {
@@ -248,8 +248,10 @@ export function inlineMemoize<R>(method: (...args: ReadonlyArray<any>) => R, log
     return result;
 }
 
-export function noop(...args: ReadonlyArray<unknown>) { // pass
+export function noop(...args: ReadonlyArray<unknown>): void { // eslint-disable-line @typescript-eslint/no-unused-vars
+    // pass
 }
+
 export function once(method: (...args: Array<any>) => any): (...args: Array<any>) => any {
     let called = false;
 
@@ -400,7 +402,7 @@ export function domainMatches(hostname: string, domain: string): boolean {
     const index = hostname.indexOf(domain);
     return index !== -1 && hostname.slice(index) === domain;
 }
-export function patchMethod(obj: Record<string, any>, name: string, handler: (...args: Array<any>) => any) {
+export function patchMethod(obj: Record<string, any>, name: string, handler: (...args: Array<any>) => any): void {
     const original = obj[name];
 
     obj[name] = function patchedMethod(): unknown {
@@ -512,7 +514,7 @@ export function promiseDebounce<T>(method: () => ZalgoPromise<T> | T, delay = 50
             timeout = null;
             ZalgoPromise.try(method).then((result: T) => {
                 localPromise.resolve(result);
-            }, (err: Error) => {
+            }, (err: unknown) => {
                 localPromise.reject(err);
             });
         }, delay);
@@ -522,7 +524,7 @@ export function promiseDebounce<T>(method: () => ZalgoPromise<T> | T, delay = 50
     return setFunctionName(promiseDebounced, `${ getFunctionName(method) }::promiseDebounced`);
 }
 export function safeInterval(method: (...args: Array<any>) => any, time: number): {
-  cancel: () => void;
+    cancel: () => void;
 } {
     let timeout: any;
 
@@ -620,11 +622,11 @@ export function undotify(obj: Record<string, string>): Record<string, any> {
     return result;
 }
 export type EventEmitterType = {
-  on: (eventName: string, handler: (...args: Array<any>) => any) => CancelableType;
-  once: (eventName: string, handler: (...args: Array<any>) => any) => CancelableType;
-  trigger: (eventName: string, ...args: ReadonlyArray<unknown>) => ZalgoPromise<void>;
-  triggerOnce: (eventName: string, ...args: ReadonlyArray<unknown>) => ZalgoPromise<void>;
-  reset: () => void;
+    on: (eventName: string, handler: (...args: Array<any>) => any) => CancelableType;
+    once: (eventName: string, handler: (...args: Array<any>) => any) => CancelableType;
+    trigger: (eventName: string, ...args: ReadonlyArray<unknown>) => ZalgoPromise<void>;
+    triggerOnce: (eventName: string, ...args: ReadonlyArray<unknown>) => ZalgoPromise<void>;
+    reset: () => void;
 };
 export function eventEmitter(): EventEmitterType {
     const triggered = {};
@@ -708,7 +710,7 @@ export function get(item: Record<string, any>, path: string, def: unknown): unkn
 
     // Loop through each section of our key path
     for (let i = 0; i < pathParts.length; i++) {
-    // If we have an object, we can get the key
+        // If we have an object, we can get the key
         if (typeof item === 'object' && item !== null) {
             item = item[pathParts[i]]; // Otherwise, we should return the default (undefined if not provided)
         } else {
@@ -719,7 +721,7 @@ export function get(item: Record<string, any>, path: string, def: unknown): unkn
     // If our final result is undefined, we should return the default
     return item === undefined ? def : item;
 }
-export function safeTimeout(method: (...args: Array<any>) => any, time: number) {
+export function safeTimeout(method: (...args: Array<any>) => any, time: number) : void{
     const interval = safeInterval(() => {
         time -= 100;
 
@@ -729,7 +731,7 @@ export function safeTimeout(method: (...args: Array<any>) => any, time: number) 
         }
     }, 100);
 }
-export function defineLazyProp<T>(obj: Record<string, any> | ReadonlyArray<unknown>, key: string | number, getter: () => T) {
+export function defineLazyProp<T>(obj: Record<string, any> | ReadonlyArray<unknown>, key: string | number, getter: () => T): void {
     if (Array.isArray(obj)) {
         if (typeof key !== 'number') {
             throw new TypeError(`Array key must be number`);
@@ -842,7 +844,7 @@ export function replaceObject<T extends ReadonlyArray<unknown> | Record<string, 
         throw new Error(`Pass an object or array`);
     }
 }
-export function copyProp(source: Record<string, any>, target: Record<string, any>, name: string, def: unknown) {
+export function copyProp(source: Record<string, any>, target: Record<string, any>, name: string, def: unknown): void {
     if (source.hasOwnProperty(name)) {
         const descriptor = Object.getOwnPropertyDescriptor(source, name);
         // @ts-ignore
@@ -852,16 +854,16 @@ export function copyProp(source: Record<string, any>, target: Record<string, any
     }
 }
 type RegexResultType = {
-  text: string;
-  groups: ReadonlyArray<string>;
-  start: number;
-  end: number;
-  length: number;
-  replace: (text: string) => string;
+    text: string;
+    groups: ReadonlyArray<string>;
+    start: number;
+    end: number;
+    length: number;
+    replace: (text: string) => string;
 };
 export function regex(pattern: string | RegExp, string: string, start = 0): RegexResultType | null | undefined {
     if (typeof pattern === 'string') {
-    // eslint-disable-next-line security/detect-non-literal-regexp
+        // eslint-disable-next-line security/detect-non-literal-regexp
         pattern = new RegExp(pattern);
     }
 
@@ -913,6 +915,7 @@ export function isDefined(value: unknown | null | undefined): boolean {
     return value !== null && value !== undefined;
 }
 export function cycle(method: (...args: Array<any>) => any): ZalgoPromise<void> {
+    // @ts-ignore - not even sure what to do with this
     return ZalgoPromise.try(method).then(() => cycle(method));
 }
 export function debounce<T>(method: (...args: ReadonlyArray<unknown>) => T, time = 100): (...args: ReadonlyArray<unknown>) => void {
@@ -959,9 +962,9 @@ export function getOrSet<T extends unknown>(obj: Record<string, any>, key: strin
     return val;
 }
 export type CleanupType = {
-  set: <T extends unknown>(arg0: string, arg1: T) => T;
-  register: (arg0: (...args: Array<any>) => any) => void;
-  all: (err?: unknown) => ZalgoPromise<void>;
+    set: <T extends unknown>(arg0: string, arg1: T) => T;
+    register: (arg0: (...args: Array<any>) => any) => void;
+    all: (err?: unknown) => ZalgoPromise<void>;
 };
 export function cleanup(obj: Record<string, any>): CleanupType {
     const tasks: any = [];
@@ -1004,11 +1007,11 @@ export function cleanup(obj: Record<string, any>): CleanupType {
     return cleaner;
 }
 export function tryCatch<T>(fn: () => T): {
-  result: T;
-  error: void;
+    result: T;
+    error: void;
 } | {
-  result: T | undefined;
-  error: unknown;
+    result: T | undefined;
+    error: unknown;
 } {
     let result;
     let error;
@@ -1024,7 +1027,7 @@ export function tryCatch<T>(fn: () => T): {
         error
     };
 }
-export function removeFromArray<X, T extends Array<X>>(arr: T, item: X) {
+export function removeFromArray<X, T extends Array<X>>(arr: T, item: X): void {
     const index = arr.indexOf(item);
 
     if (index !== -1) {

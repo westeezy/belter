@@ -33,7 +33,6 @@ export function urlEncode(str: string): string {
 }
 export function waitForWindowReady(): ZalgoPromise<void> {
     return inlineMemoize(waitForWindowReady, (): ZalgoPromise<void> => {
-        // @ts-upgrade TODO: - Need to get in zalgo promise defs
         return new ZalgoPromise((resolve: Function) => {
             if (isDocumentReady()) {
                 resolve();
@@ -45,7 +44,6 @@ export function waitForWindowReady(): ZalgoPromise<void> {
 }
 type WaitForDocumentReady = () => ZalgoPromise<void>;
 export const waitForDocumentReady: WaitForDocumentReady = memoize(() => {
-    // @ts-upgrade TODO: - Need to get in zalgo promise defs
     return new ZalgoPromise((resolve: Function) => {
         if (isDocumentReady() || isDocumentInteractive()) {
             return resolve();
@@ -59,7 +57,7 @@ export const waitForDocumentReady: WaitForDocumentReady = memoize(() => {
         }, 10);
     });
 });
-export function waitForDocumentBody(): ZalgoPromise<HTMLBodyElement> {
+export function waitForDocumentBody(): ZalgoPromise<HTMLElement | HTMLBodyElement> {
     return ZalgoPromise.try(() => {
         if (document.body) {
             return document.body;
@@ -513,6 +511,7 @@ export type ElementOptionsType = {
     styleSheet?: string | null | undefined;
     html?: string | null | undefined;
 };
+
 let awaitFrameLoadPromises: WeakMap<HTMLIFrameElement, ZalgoPromise<HTMLIFrameElement>>;
 export function awaitFrameLoad(frame: HTMLIFrameElement): ZalgoPromise<HTMLIFrameElement> {
     awaitFrameLoadPromises = awaitFrameLoadPromises || new WeakMap();
@@ -525,8 +524,7 @@ export function awaitFrameLoad(frame: HTMLIFrameElement): ZalgoPromise<HTMLIFram
         }
     }
 
-    // @ts-upgrade TODO - import types for zalgo promise
-    const promise = new ZalgoPromise((resolve: Function, reject: Function) => {
+    const promise = new ZalgoPromise<HTMLIFrameElement>((resolve: Function, reject: Function) => {
         frame.addEventListener('load', () => {
             linkFrameWindow(frame);
             resolve(frame);
@@ -542,6 +540,7 @@ export function awaitFrameLoad(frame: HTMLIFrameElement): ZalgoPromise<HTMLIFram
     awaitFrameLoadPromises.set(frame, promise);
     return promise;
 }
+
 export function awaitFrameWindow(frame: HTMLIFrameElement): ZalgoPromise<CrossDomainWindowType> {
     return awaitFrameLoad(frame).then((loadedFrame: any) => {
         if (!loadedFrame.contentWindow) {
@@ -553,7 +552,6 @@ export function awaitFrameWindow(frame: HTMLIFrameElement): ZalgoPromise<CrossDo
 }
 
 const getDefaultCreateElementOptions = (): ElementOptionsType => {
-    // $FlowFixMe
     return {};
 };
 
@@ -1165,7 +1163,7 @@ export function submitForm({
     target,
     body,
     method = 'post'
-}: SubmitFormOptions) {
+}: SubmitFormOptions): void {
     const form = document.createElement('form');
     form.setAttribute('target', target);
     form.setAttribute('method', method);

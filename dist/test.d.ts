@@ -1,4 +1,4 @@
-import { ZalgoPromise } from 'zalgo-promise/src';
+import { ZalgoPromise } from 'zalgo-promise';
 declare type Prom<X> = Promise<X> | ZalgoPromise<X>;
 declare type Handler = <T, A extends ReadonlyArray<unknown>>(name: string, fn?: (...args: A) => T) => (...args: A) => T;
 declare type Wrapper<T> = (arg0: {
