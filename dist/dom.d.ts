@@ -1,0 +1,134 @@
+import { ZalgoPromise } from 'zalgo-promise';
+import type { SameDomainWindowType, CrossDomainWindowType } from 'cross-domain-utils';
+import { ExtendableError } from './util';
+import type { CancelableType } from './types';
+declare type ElementRefType = string | HTMLElement;
+export declare function getBody(): HTMLBodyElement | HTMLElement;
+export declare function isDocumentReady(): boolean;
+export declare function isDocumentInteractive(): boolean;
+export declare function urlEncode(str: string): string;
+export declare function waitForWindowReady(): ZalgoPromise<void>;
+declare type WaitForDocumentReady = () => ZalgoPromise<void>;
+export declare const waitForDocumentReady: WaitForDocumentReady;
+export declare function waitForDocumentBody(): ZalgoPromise<HTMLElement | HTMLBodyElement>;
+export declare function parseQuery(queryString: string): Record<string, any>;
+export declare function getQueryParam(name: string): string;
+export declare function urlWillRedirectPage(url: string): boolean;
+export declare type Query = Record<string, boolean | string>;
+export declare function formatQuery(obj?: Query): string;
+export declare function extendQuery(originalQuery: string, props?: Query): string;
+export declare function extendUrl(url: string, options: {
+    query?: Query;
+    hash?: Query;
+}): string;
+export declare function redirect(url: string, win?: CrossDomainWindowType): ZalgoPromise<void>;
+export declare function hasMetaViewPort(): boolean;
+export declare function isElementVisible(el: HTMLElement): boolean;
+export declare function getPerformance(): Performance | null | undefined;
+export declare function enablePerformance(): boolean;
+export declare function getPageRenderTime(): ZalgoPromise<number | null | undefined>;
+export declare function htmlEncode(html?: string): string;
+export declare function isBrowser(): boolean;
+export declare function querySelectorAll(selector: string, doc?: HTMLDocument): ReadonlyArray<HTMLElement>;
+export declare function onClick(element: HTMLElement, handler: (arg0: Event) => void): void;
+export declare function getScript({ host, path, reverse }: {
+    host?: string;
+    path: string;
+    reverse?: boolean;
+}): HTMLScriptElement | null | undefined;
+export declare function isLocalStorageEnabled(): boolean;
+export declare function getBrowserLocales(): Array<{
+    country?: string;
+    lang: string;
+}>;
+export declare function appendChild(container: HTMLElement, child: HTMLElement | Text): void;
+export declare function isElement(element: unknown): boolean;
+export declare function getElementSafe(id: ElementRefType, doc?: Document | HTMLElement): HTMLElement | null | undefined;
+export declare function getElement(id: ElementRefType, doc?: Document | HTMLElement): HTMLElement;
+export declare function elementReady(id: ElementRefType): ZalgoPromise<HTMLElement>;
+export declare class PopupOpenError extends ExtendableError {
+}
+declare type PopupOptions = {
+    name?: string;
+    width?: number;
+    height?: number;
+    top?: number;
+    left?: number;
+    status?: 0 | 1;
+    resizable?: 0 | 1;
+    toolbar?: 0 | 1;
+    menubar?: 0 | 1;
+    scrollbars?: 0 | 1;
+};
+export declare function popup(url: string, options?: PopupOptions): CrossDomainWindowType;
+export declare function writeToWindow(win: SameDomainWindowType, html: string): void;
+export declare function writeElementToWindow(win: SameDomainWindowType, el: HTMLElement): void;
+export declare function setStyle(el: HTMLElement, styleText: string, doc?: Document): void;
+export declare type ElementOptionsType = {
+    style?: Record<string, string>;
+    id?: string;
+    class?: ReadonlyArray<string> | null | undefined;
+    attributes?: Record<string, string>;
+    styleSheet?: string | null | undefined;
+    html?: string | null | undefined;
+};
+export declare function awaitFrameLoad(frame: HTMLIFrameElement): ZalgoPromise<HTMLIFrameElement>;
+export declare function awaitFrameWindow(frame: HTMLIFrameElement): ZalgoPromise<CrossDomainWindowType>;
+export declare function createElement(tag: string | undefined, options: ElementOptionsType | undefined, container: HTMLElement | null | undefined): HTMLElement;
+declare type StringMap = Record<string, string>;
+export declare type IframeElementOptionsType = {
+    style?: StringMap;
+    class?: ReadonlyArray<string> | null | undefined;
+    attributes?: StringMap;
+    styleSheet?: string | null | undefined;
+    html?: string | null | undefined;
+    url?: string | null | undefined;
+};
+export declare function iframe(options: IframeElementOptionsType | undefined, container: HTMLElement | null | undefined): HTMLIFrameElement;
+export declare function addEventListener(obj: HTMLElement, event: string, handler: (event: Event) => void): CancelableType;
+export declare function bindEvents(element: HTMLElement, eventNames: ReadonlyArray<string>, handler: (event: Event) => void): CancelableType;
+export declare function setVendorCSS(element: HTMLElement, name: string, value: string): void;
+export declare function animate(element: ElementRefType, name: string, clean: (arg0: (...args: Array<any>) => any) => void, timeout?: number): ZalgoPromise<void>;
+export declare function makeElementVisible(element: HTMLElement): void;
+export declare function makeElementInvisible(element: HTMLElement): void;
+export declare function showElement(element: HTMLElement): void;
+export declare function hideElement(element: HTMLElement): void;
+export declare function destroyElement(element: HTMLElement): void;
+export declare function showAndAnimate(element: HTMLElement, name: string, clean: (arg0: (...args: Array<any>) => any) => void): ZalgoPromise<void>;
+export declare function animateAndHide(element: HTMLElement, name: string, clean: (arg0: (...args: Array<any>) => any) => void): ZalgoPromise<void>;
+export declare function addClass(element: HTMLElement, name: string): void;
+export declare function removeClass(element: HTMLElement, name: string): void;
+export declare function isElementClosed(el: HTMLElement): boolean;
+export declare function watchElementForClose(element: HTMLElement, handler: () => unknown): CancelableType;
+export declare function fixScripts(el: HTMLElement, doc?: Document): void;
+declare type OnResizeOptions = {
+    width?: boolean;
+    height?: boolean;
+    interval?: number;
+    win?: SameDomainWindowType;
+};
+export declare function onResize(el: HTMLElement, handler: (arg0: {
+    width: number;
+    height: number;
+}) => void, { width, height, interval, win }?: OnResizeOptions): {
+    cancel: () => void;
+};
+export declare function getResourceLoadTime(url: string): number | null | undefined;
+export declare function isShadowElement(element: Node): boolean;
+export declare function getShadowRoot(element: Node): Node | null | undefined;
+export declare function getShadowHost(element: Node): HTMLElement | null | undefined;
+export declare function insertShadowSlot(element: HTMLElement): HTMLElement;
+export declare function preventClickFocus(el: HTMLElement): void;
+export declare function getStackTrace(): string;
+declare type GetCurrentScript = () => HTMLScriptElement;
+export declare const getCurrentScript: GetCurrentScript;
+declare type GetCurrentScriptUID = () => string;
+export declare const getCurrentScriptUID: GetCurrentScriptUID;
+declare type SubmitFormOptions = {
+    url: string;
+    target: string;
+    body?: Record<string, string | boolean>;
+    method?: string;
+};
+export declare function submitForm({ url, target, body, method }: SubmitFormOptions): void;
+export {};
