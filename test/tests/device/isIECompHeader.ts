@@ -2,6 +2,7 @@ import { isIECompHeader } from '../../../src/device';
 
 describe('isIECompHeader', () => {
     beforeEach(() => {
+        // @ts-ignore
         window.document.querySelector = () => true;
     });
     it('should return true when both mHttp and mContent are truthy', () => {
@@ -12,6 +13,7 @@ describe('isIECompHeader', () => {
         }
     });
     it('should return false when mHttp is falsy', () => {
+        // @ts-ignore
         window.document.querySelector = elem => elem !== 'meta[http-equiv="X-UA-Compatible"]';
 
         const bool = isIECompHeader();
@@ -21,6 +23,7 @@ describe('isIECompHeader', () => {
         }
     });
     it('should return false when mContent is falsy', () => {
+        // @ts-ignore
         window.document.querySelector = elem => elem !== 'meta[content="IE=edge"]';
 
         const bool = isIECompHeader();

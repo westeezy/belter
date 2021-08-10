@@ -2,9 +2,11 @@ import { isFirefox } from '../../../src/device';
 
 describe('isFirefoxIOS', () => {
     beforeEach(() => {
+        // @ts-ignore
         window.navigator = {};
     });
     it('should return true when userAgent contains firefox(case insensitive)', () => {
+        // @ts-ignore
         window.navigator.userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:87.0) Gecko/20100101 Firefox/87.0';
         const bool = isFirefox();
 
@@ -13,6 +15,7 @@ describe('isFirefoxIOS', () => {
         }
     });
     it('should return false when userAgent does NOT contain firefox(case insensitive)', () => {
+        // @ts-ignore
         window.navigator.userAgent = 'fired potato';
         const bool = isFirefox();
 

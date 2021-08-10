@@ -2,6 +2,7 @@ import { isGoogleSearchApp } from '../../../src/device';
 
 describe('isGoogleSearchApp', () => {
     it('should return true when userAgent contains whole word GSA ', () => {
+        // @ts-ignore
         window.navigator.userAgent = 'GSA';
         const bool = isGoogleSearchApp();
 
@@ -10,6 +11,7 @@ describe('isGoogleSearchApp', () => {
         }
     });
     it('should return false when userAgent does NOT contain whole word GSA', () => {
+        // @ts-ignore
         window.navigator.userAgent = 'poGSAtato';
         const bool = isGoogleSearchApp();
 

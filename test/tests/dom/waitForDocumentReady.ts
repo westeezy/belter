@@ -5,6 +5,7 @@ describe('waitForDocumentReady cases', () => {
     beforeEach(memoize.clear);
     it('should resolve when document is interactive', async () => {
         try {
+            // @ts-ignore
             document.readyState = 'interactive';
             await waitForDocumentReady();
         } catch (err) {
@@ -13,8 +14,10 @@ describe('waitForDocumentReady cases', () => {
     });
     it('should eventully resolve when document is ready', async () => {
         try {
+            // @ts-ignore
             document.readyState = 'loading';
             setTimeout(() => {
+                // @ts-ignore
                 document.readyState = 'complete';
             }, 20);
             await waitForDocumentReady();

@@ -2,6 +2,7 @@ import { isApplePaySupported } from '../../../src/device';
 
 describe('isApplePaySupported', () => {
     it('should return true if ApplePaySession and canMakePayments is true', () => {
+        // @ts-ignore
         window.ApplePaySession = {
             supportsVersion: () => {
                 return true;
@@ -17,6 +18,7 @@ describe('isApplePaySupported', () => {
         }
     });
     it('should return false if ApplePaySession and canMakePayments is false', () => {
+        // @ts-ignore
         window.ApplePaySession = null;
         const bool = isApplePaySupported();
 

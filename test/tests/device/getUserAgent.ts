@@ -2,10 +2,12 @@ import { getUserAgent } from '../../../src/device';
 
 describe('getUserAgent', () => {
     beforeEach(() => {
+        // @ts-ignore
         window.navigator = {};
     });
     it('should return value of window.navigator.mockUserAgent', () => {
         const expectedResult = 'mock potato';
+        // @ts-ignore
         window.navigator.mockUserAgent = expectedResult;
         const mockUserAgent = getUserAgent();
 
@@ -15,6 +17,7 @@ describe('getUserAgent', () => {
     });
     it('should return value of window.navigator.userAgent', () => {
         const expectedResult = 'userAgent potato';
+        // @ts-ignore
         window.navigator.userAgent = expectedResult;
         const userAgent = getUserAgent();
 

@@ -2,9 +2,11 @@ import { isAndroid } from '../../../src/device';
 
 describe('android', () => {
     beforeEach(() => {
+        // @ts-ignore
         window.navigator = {};
     });
     it('should return true when userAgent contains Android', () => {
+        // @ts-ignore
         window.navigator.userAgent = 'Android';
         const bool = isAndroid();
 
@@ -13,6 +15,7 @@ describe('android', () => {
         }
     });
     it('should return false when userAgent does NOT contain Android', () => {
+        // @ts-ignore
         window.navigator.userAgent = 'android';
         const bool = isAndroid();
 

@@ -2,6 +2,7 @@ import { isQQBrowser } from '../../../src/device';
 
 describe('isQQBrowser', () => {
     it('should return true when userAgent contains QQBrowser', () => {
+        // @ts-ignore
         window.navigator.userAgent = 'QQBrowser';
         const bool = isQQBrowser();
 
@@ -10,6 +11,7 @@ describe('isQQBrowser', () => {
         }
     });
     it('should return false when userAgent does NOT contain QQBrowser', () => {
+        // @ts-ignore
         window.navigator.userAgent = 'QQPotato';
         const bool = isQQBrowser();
 

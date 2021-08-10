@@ -85,6 +85,7 @@ describe('Web components', () => {
                 throw new Error(`should have returned innerElement`);
             }
 
+            // @ts-ignore
             if (!result.toString() === '[object ShadowRoot]') {
                 throw new Error(`should have returned '[object ShadowRoot]', got ${ result.toString() }`);
             }
@@ -133,6 +134,7 @@ describe('Web components', () => {
                 throw new Error('unable to find inner element');
             }
 
+            // @ts-ignore
             const result = insertShadowSlot(innerElement);
 
             if (!result) {

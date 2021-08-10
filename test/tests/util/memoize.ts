@@ -140,7 +140,7 @@ describe('memoize cases', () => {
     it('should create a self-memoized function', () => {
         let counter = 0;
 
-        const add = () => {
+        const add = (): void => {
             return inlineMemoize(add, () => {
                 counter += 1;
             });
@@ -159,7 +159,7 @@ describe('memoize cases', () => {
     it('should create a self-memoized function with a parameter', () => {
         let counter = 0;
 
-        const add = number => {
+        const add = (number: number): void => {
             return inlineMemoize(add, () => {
                 counter += number;
             }, [ number ]);
@@ -179,7 +179,7 @@ describe('memoize cases', () => {
     it('should create a self-memoized function and call recursively', () => {
         let counter = 0;
 
-        const add = () => {
+        const add = (): void => {
             return inlineMemoize(add, () => {
                 counter += 1;
 

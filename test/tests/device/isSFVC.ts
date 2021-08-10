@@ -6,11 +6,15 @@ import { iPhoneScreenHeightMatrix } from '../../../src/screenHeights';
 
 describe('isSFVC', () => {
     Object.keys(iPhoneScreenHeightMatrix).forEach(height => {
+        // @ts-ignore
         const device = iPhoneScreenHeightMatrix[height].device;
+        // @ts-ignore
         const textSizeHeights = iPhoneScreenHeightMatrix[height].textSizeHeights;
         describe(`${ device }`, () => {
+            // @ts-ignore
             textSizeHeights.forEach(textSize => {
                 it(`${ textSize } text size should not be a web view`, () => {
+                    // @ts-ignore
                     window.navigator.userAgent = 'iPhone';
                     const sfvc = isSFVC();
 
@@ -22,6 +26,7 @@ describe('isSFVC', () => {
         });
     });
     it('should return false when isIos function returns false', () => {
+        // @ts-ignore
         window.navigator.userAgent = 'potatoIOS';
         const sfvc = isSFVC();
 

@@ -12,8 +12,10 @@ describe('document interactive cases', () => {
     it('should return true when document is interactive', () => {
         const oldState = document.readyState;
         // document.readyState is a readonly property, we are using the 'set(ter)' from the last test to change readyState
+        // @ts-ignore
         document.readyState = 'interactive';
         const result = isDocumentInteractive();
+        // @ts-ignore
         document.readyState = oldState;
 
         if (!result) {

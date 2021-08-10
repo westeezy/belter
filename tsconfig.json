@@ -1,4 +1,3 @@
 {
-    "extends": "grumbler-scripts/config/tsconfig.json",
-    "exclude": ["test/**/*"]
+    "extends": "grumbler-scripts/config/tsconfig.json"
 }

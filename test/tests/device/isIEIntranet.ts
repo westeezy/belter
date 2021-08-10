@@ -2,6 +2,7 @@ import { isIEIntranet } from '../../../src/device';
 
 describe('isIEIntranet', () => {
     beforeEach(() => {
+        // @ts-ignore
         window.document.documentMode = true;
         Object.defineProperty(window, 'status', {
             writable: true
@@ -34,6 +35,7 @@ describe('isIEIntranet', () => {
         }
     });
     it('should return false when window.document.documentMode is a falsy value', () => {
+        // @ts-ignore
         window.document.documentMode = false;
         const bool = isIEIntranet();
 

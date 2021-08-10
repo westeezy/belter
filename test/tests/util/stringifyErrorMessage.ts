@@ -2,8 +2,9 @@ import { stringifyErrorMessage } from '../../../src';
 
 describe('stringifyErrorMessage', () => {
     it('should return default error message when argument is falsy', () => {
-    // $FlowFixMe method-unbinding
+        // @ts-ignore
         const defaultMessage = `<unknown error: ${ Object.prototype.toString.call() }>`;
+        // @ts-ignore
         const message = stringifyErrorMessage();
 
         if (message !== defaultMessage) {
@@ -20,7 +21,6 @@ describe('stringifyErrorMessage', () => {
     });
     it('should return default message if Error instance without a message is passed', () => {
         const error = new Error();
-        // $FlowFixMe method-unbinding
         const expectedMessage = `<unknown error: ${ Object.prototype.toString.call(error) }>`;
         const message = stringifyErrorMessage(error);
 
@@ -33,6 +33,7 @@ describe('stringifyErrorMessage', () => {
             message: 'Hello'
         };
         const expectedMessage = 'Hello';
+        // @ts-ignore
         const message = stringifyErrorMessage(error);
 
         if (message !== expectedMessage) {
@@ -43,8 +44,8 @@ describe('stringifyErrorMessage', () => {
         const error = {
             message: ''
         };
-        // $FlowFixMe method-unbinding
         const expectedMessage = `<unknown error: ${ Object.prototype.toString.call(error) }>`;
+        // @ts-ignore
         const message = stringifyErrorMessage(error);
 
         if (message !== expectedMessage) {
@@ -53,8 +54,8 @@ describe('stringifyErrorMessage', () => {
     });
     it('should return default message if a primitive argument is passed or argument has non-string value in message field', () => {
         const error = 42;
-        // $FlowFixMe method-unbinding
         const expectedMessage = `<unknown error: ${ Object.prototype.toString.call(error) }>`;
+        // @ts-ignore
         const message = stringifyErrorMessage(error);
 
         if (message !== expectedMessage) {

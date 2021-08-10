@@ -12,6 +12,7 @@ type Wrapper<T> = (arg0: {
     error: Handler;
     wait: () => Prom<void>;
 }) => Prom<T> | void;
+
 export function wrapPromise<T>(method: Wrapper<T>, {
     timeout = 5000
 }: {
