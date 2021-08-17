@@ -18,7 +18,7 @@ describe('memoize cases', () => {
     });
     it('should create a memoized function with a parameter', () => {
         let counter = 0;
-        const add = memoize(number => {
+        const add = memoize((number) => {
             counter += number;
         });
         add(1);
@@ -53,7 +53,7 @@ describe('memoize cases', () => {
     });
     it('should create a memoized function with a parameter, and reset', () => {
         let counter = 0;
-        const add = memoize(number => {
+        const add = memoize((number) => {
             counter += number;
         });
         add(1);
@@ -91,7 +91,7 @@ describe('memoize cases', () => {
     });
     it('should create a memoized function with a parameter, and clear', () => {
         let counter = 0;
-        const add = memoize(number => {
+        const add = memoize((number) => {
             counter += number;
         });
         add(1);
@@ -160,9 +160,13 @@ describe('memoize cases', () => {
         let counter = 0;
 
         const add = (number: number): void => {
-            return inlineMemoize(add, () => {
-                counter += number;
-            }, [ number ]);
+            return inlineMemoize(
+                add,
+                () => {
+                    counter += number;
+                },
+                [ number ]
+            );
         };
 
         add(1);
@@ -197,11 +201,14 @@ describe('memoize cases', () => {
     });
     it('should create a memoized function with cache based on this', () => {
         let counter = 0;
-        const add = memoize(() => {
-            counter += 1;
-        }, {
-            thisNamespace: true
-        });
+        const add = memoize(
+            () => {
+                counter += 1;
+            },
+            {
+                thisNamespace: true
+            }
+        );
         const obj1 = {
             name: 'obj1'
         };
@@ -223,11 +230,14 @@ describe('memoize cases', () => {
     });
     it('should create a memoized function with cache based on this and a parameter', () => {
         let counter = 0;
-        const add = memoize(number => {
-            counter += number;
-        }, {
-            thisNamespace: true
-        });
+        const add = memoize(
+            (number) => {
+                counter += number;
+            },
+            {
+                thisNamespace: true
+            }
+        );
         const obj1 = {
             name: 'obj1'
         };
@@ -253,11 +263,14 @@ describe('memoize cases', () => {
     });
     it('should create a memoized function with cache based on this, and reset the cache', () => {
         let counter = 0;
-        const add = memoize(() => {
-            counter += 1;
-        }, {
-            thisNamespace: true
-        });
+        const add = memoize(
+            () => {
+                counter += 1;
+            },
+            {
+                thisNamespace: true
+            }
+        );
         const obj1 = {
             name: 'obj1'
         };
@@ -281,11 +294,14 @@ describe('memoize cases', () => {
     });
     it('should create a memoized function with cache based on this and a parameter, and reset the cache', () => {
         let counter = 0;
-        const add = memoize(number => {
-            counter += number;
-        }, {
-            thisNamespace: true
-        });
+        const add = memoize(
+            (number) => {
+                counter += number;
+            },
+            {
+                thisNamespace: true
+            }
+        );
         const obj1 = {
             name: 'obj1'
         };
@@ -316,11 +332,14 @@ describe('memoize cases', () => {
     });
     it('should create a memoized function with cache based on this, and clear the cache', () => {
         let counter = 0;
-        const add = memoize(() => {
-            counter += 1;
-        }, {
-            thisNamespace: true
-        });
+        const add = memoize(
+            () => {
+                counter += 1;
+            },
+            {
+                thisNamespace: true
+            }
+        );
         const obj1 = {
             name: 'obj1'
         };
@@ -344,11 +363,14 @@ describe('memoize cases', () => {
     });
     it('should create a memoized function with cache based on this and a parameter, and clear the cache', () => {
         let counter = 0;
-        const add = memoize(number => {
-            counter += number;
-        }, {
-            thisNamespace: true
-        });
+        const add = memoize(
+            (number) => {
+                counter += number;
+            },
+            {
+                thisNamespace: true
+            }
+        );
         const obj1 = {
             name: 'obj1'
         };

@@ -74,7 +74,7 @@ export declare type ElementOptionsType = {
 };
 export declare function awaitFrameLoad(frame: HTMLIFrameElement): ZalgoPromise<HTMLIFrameElement>;
 export declare function awaitFrameWindow(frame: HTMLIFrameElement): ZalgoPromise<CrossDomainWindowType>;
-export declare function createElement(tag: string | undefined, options: ElementOptionsType | undefined, container: HTMLElement | null | undefined): HTMLElement;
+export declare function createElement(tag: string, options: ElementOptionsType, container: HTMLElement | null | undefined): HTMLElement;
 declare type StringMap = Record<string, string>;
 export declare type IframeElementOptionsType = {
     style?: StringMap;
@@ -84,7 +84,7 @@ export declare type IframeElementOptionsType = {
     html?: string | null | undefined;
     url?: string | null | undefined;
 };
-export declare function iframe(options: IframeElementOptionsType | undefined, container: HTMLElement | null | undefined): HTMLIFrameElement;
+export declare function iframe(options: IframeElementOptionsType, container: HTMLElement | null | undefined): HTMLIFrameElement;
 export declare function addEventListener(obj: HTMLElement, event: string, handler: (event: Event) => void): CancelableType;
 export declare function bindEvents(element: HTMLElement, eventNames: ReadonlyArray<string>, handler: (event: Event) => void): CancelableType;
 export declare function setVendorCSS(element: HTMLElement, name: string, value: string): void;

@@ -29,7 +29,7 @@ export function toCSS(val: number | string): string {
 }
 export function percOf(num: number, perc: string): number {
     // @ts-ignore - parseInt not needed as this is a number
-    return parseInt(num * toNum(perc) / 100, 10);
+    return parseInt((num * toNum(perc)) / 100, 10);
 }
 export function normalizeDimension(dim: string | number, max: number): number {
     if (typeof dim === 'number') {

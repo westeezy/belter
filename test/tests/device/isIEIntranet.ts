@@ -12,10 +12,8 @@ describe('isIEIntranet', () => {
         Object.defineProperty(window, 'status', {
             // returning something in a setter causes window.status to equal undefined when someone sets a value to it
             set(_): any {
-                return `potato${ _ }`;  // eslint-disable-line no-setter-return
+                return `potato${ _ }`; // eslint-disable-line no-setter-return
             }
-
-
         });
         const bool = isIEIntranet();
 
@@ -24,7 +22,7 @@ describe('isIEIntranet', () => {
         }
     });
     it('should jump to catch block error and return false when there is an error', () => {
-    // Doing this will cause an error of writing to a read-only variable
+        // Doing this will cause an error of writing to a read-only variable
         Object.defineProperty(window, 'status', {
             writable: false
         });

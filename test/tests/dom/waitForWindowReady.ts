@@ -25,7 +25,9 @@ describe('waitForWindowReady function', () => {
             }, 500);
             await waitForWindowReady();
         } catch (err) {
-            throw new Error('Expected waitForWindowReady to eventually resolve');
+            throw new Error(
+                'Expected waitForWindowReady to eventually resolve'
+            );
         }
     });
 });

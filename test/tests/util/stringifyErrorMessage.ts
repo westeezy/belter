@@ -21,7 +21,9 @@ describe('stringifyErrorMessage', () => {
     });
     it('should return default message if Error instance without a message is passed', () => {
         const error = new Error();
-        const expectedMessage = `<unknown error: ${ Object.prototype.toString.call(error) }>`;
+        const expectedMessage = `<unknown error: ${ Object.prototype.toString.call(
+            error
+        ) }>`;
         const message = stringifyErrorMessage(error);
 
         if (message !== expectedMessage) {
@@ -44,7 +46,9 @@ describe('stringifyErrorMessage', () => {
         const error = {
             message: ''
         };
-        const expectedMessage = `<unknown error: ${ Object.prototype.toString.call(error) }>`;
+        const expectedMessage = `<unknown error: ${ Object.prototype.toString.call(
+            error
+        ) }>`;
         // @ts-ignore
         const message = stringifyErrorMessage(error);
 
@@ -54,7 +58,9 @@ describe('stringifyErrorMessage', () => {
     });
     it('should return default message if a primitive argument is passed or argument has non-string value in message field', () => {
         const error = 42;
-        const expectedMessage = `<unknown error: ${ Object.prototype.toString.call(error) }>`;
+        const expectedMessage = `<unknown error: ${ Object.prototype.toString.call(
+            error
+        ) }>`;
         // @ts-ignore
         const message = stringifyErrorMessage(error);
 

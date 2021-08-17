@@ -7,7 +7,9 @@ describe('domainMatches', () => {
         const result = base64encode(original);
 
         if (result !== expected) {
-            throw new Error(`Expected base64 of ${ original } to be ${ expected }, got ${ result }`);
+            throw new Error(
+                `Expected base64 of ${ original } to be ${ expected }, got ${ result }`
+            );
         }
     });
 });

@@ -3,14 +3,14 @@ import { extend } from '../../../src';
 describe('extend cases', () => {
     it('should add keys from one object to another', () => {
         const obj1: Record<string, any> = {
-            'foo': 1,
-            'bar': 2,
-            'baz': 3
+            foo:1,
+            bar:2,
+            baz:3
         };
         const obj2: Record<string, any> = {
-            'blep':  4,
-            'blop':  5,
-            'bloop': 6
+            blep: 4,
+            blop: 5,
+            bloop:6
         };
         extend(obj1, obj2);
 
@@ -23,7 +23,9 @@ describe('extend cases', () => {
         }
 
         if (obj1.bloop !== 6) {
-            throw new Error(`Expected obj1.bloop to equal 6, got ${ obj1.bloop }`);
+            throw new Error(
+                `Expected obj1.bloop to equal 6, got ${ obj1.bloop }`
+            );
         }
     });
 });

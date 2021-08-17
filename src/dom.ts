@@ -1,10 +1,30 @@
-/* eslint max-lines: off */
+/* eslint max-lines: off, unicorn/prefer-event-key: off */
 import { ZalgoPromise } from 'zalgo-promise';
-import type { SameDomainWindowType, CrossDomainWindowType } from 'cross-domain-utils';
-import { linkFrameWindow, isWindowClosed, assertSameDomain } from 'cross-domain-utils'; // eslint-disable-line no-duplicate-imports
+import type {
+    SameDomainWindowType,
+    CrossDomainWindowType
+} from 'cross-domain-utils';
+import {
+    linkFrameWindow,
+    isWindowClosed,
+    assertSameDomain
+} from 'cross-domain-utils';
 import { WeakMap } from 'cross-domain-safe-weakmap';
 
-import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, strHashStr } from './util';
+import {
+    inlineMemoize,
+    memoize,
+    noop,
+    stringify,
+    capitalizeFirstLetter,
+    once,
+    extend,
+    safeInterval,
+    uniqueID,
+    arrayFrom,
+    ExtendableError,
+    strHashStr
+} from './util';
 import { isDevice } from './device';
 import { KEY_CODES, ATTRIBUTES, UID_HASH_LENGTH } from './constants';
 import type { CancelableType } from './types';
@@ -57,7 +77,9 @@ export const waitForDocumentReady: WaitForDocumentReady = memoize(() => {
         }, 10);
     });
 });
-export function waitForDocumentBody(): ZalgoPromise<HTMLElement | HTMLBodyElement> {
+export function waitForDocumentBody(): ZalgoPromise<
+    HTMLElement | HTMLBodyElement
+    > {
     return ZalgoPromise.try(() => {
         if (document.body) {
             return document.body;
@@ -73,29 +95,35 @@ export function waitForDocumentBody(): ZalgoPromise<HTMLElement | HTMLBodyElemen
     });
 }
 export function parseQuery(queryString: string): Record<string, any> {
-    return inlineMemoize(parseQuery, (): Record<string, any> => {
-        const params = {};
+    return inlineMemoize(
+        parseQuery,
+        (): Record<string, any> => {
+            const params = {};
 
-        if (!queryString) {
-            return params;
-        }
-
-        if (queryString.indexOf('=') === -1) {
-            return params;
-        }
-
-        for (let pair of queryString.split('&')) {
-            // @ts-ignore - should we actually be using a temp variable here. this seems strange
-            pair = pair.split('=');
-
-            if (pair[0] && pair[1]) {
-                // @ts-ignore - params is untyped
-                params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+            if (!queryString) {
+                return params;
             }
-        }
 
-        return params;
-    }, [ queryString ]);
+            if (queryString.indexOf('=') === -1) {
+                return params;
+            }
+
+            for (let pair of queryString.split('&')) {
+                // @ts-ignore - should we actually be using a temp variable here. this seems strange
+                pair = pair.split('=');
+
+                if (pair[0] && pair[1]) {
+                    // @ts-ignore - params is untyped
+                    params[decodeURIComponent(pair[0])] = decodeURIComponent(
+                        pair[1]
+                    );
+                }
+            }
+
+            return params;
+        },
+        [ queryString ]
+    );
 }
 export function getQueryParam(name: string): string {
     return parseQuery(window.location.search.slice(1))[name];
@@ -117,31 +145,37 @@ export function urlWillRedirectPage(url: string): boolean {
 }
 export type Query = Record<string, boolean | string>;
 export function formatQuery(obj: Query = {}): string {
-    return Object.keys(obj).filter(key => {
-        return typeof obj[key] === 'string' || typeof obj[key] === 'boolean';
-    }).map(key => {
-        const val = obj[key];
+    return Object.keys(obj)
+        .filter((key) => {
+            return (
+                typeof obj[key] === 'string' || typeof obj[key] === 'boolean'
+            );
+        })
+        .map((key) => {
+            const val = obj[key];
 
-        if (typeof val !== 'string' && typeof val !== 'boolean') {
-            throw new TypeError(`Invalid type for query`);
-        }
+            if (typeof val !== 'string' && typeof val !== 'boolean') {
+                throw new TypeError(`Invalid type for query`);
+            }
 
-        return `${ urlEncode(key) }=${ urlEncode(val.toString()) }`;
-    }).join('&');
+            return `${ urlEncode(key) }=${ urlEncode(val.toString()) }`;
+        })
+        .join('&');
 }
 export function extendQuery(originalQuery: string, props: Query = {}): string {
     if (!props || !Object.keys(props).length) {
         return originalQuery;
     }
 
-    return formatQuery({ ...parseQuery(originalQuery),
-        ...props
-    });
+    return formatQuery({ ...parseQuery(originalQuery), ...props });
 }
-export function extendUrl(url: string, options: {
-    query?: Query;
-    hash?: Query;
-}): string {
+export function extendUrl(
+    url: string,
+    options: {
+        query?: Query;
+        hash?: Query;
+    }
+): string {
     const query = options.query || {};
     const hash = options.hash || {};
     let originalUrl;
@@ -162,7 +196,10 @@ export function extendUrl(url: string, options: {
 
     return originalUrl;
 }
-export function redirect(url: string, win: CrossDomainWindowType = window): ZalgoPromise<void> {
+export function redirect(
+    url: string,
+    win: CrossDomainWindowType = window
+): ZalgoPromise<void> {
     // @ts-upgrade TODO: - Need to get in zalgo promise defs
     return new ZalgoPromise((resolve: Function) => {
         // @ts-ignore
@@ -183,13 +220,26 @@ export function hasMetaViewPort(): boolean {
     return true;
 }
 export function isElementVisible(el: HTMLElement): boolean {
-    return Boolean(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+    return Boolean(
+        el.offsetWidth || el.offsetHeight || el.getClientRects().length
+    );
 }
 export function getPerformance(): Performance | null | undefined {
     return inlineMemoize(getPerformance, (): Performance | null | undefined => {
         const performance = window.performance;
 
-        if (performance && performance.now && performance.timing && performance.timing.connectEnd && performance.timing.navigationStart && Math.abs(performance.now() - Date.now()) > 1000 && performance.now() - (performance.timing.connectEnd - performance.timing.navigationStart) > 0) {
+        if (
+            performance &&
+            performance.now &&
+            performance.timing &&
+            performance.timing.connectEnd &&
+            performance.timing.navigationStart &&
+            Math.abs(performance.now() - Date.now()) > 1000 &&
+            performance.now() -
+                (performance.timing.connectEnd -
+                    performance.timing.navigationStart) >
+                0
+        ) {
             return performance;
         }
     });
@@ -213,20 +263,37 @@ export function getPageRenderTime(): ZalgoPromise<number | null | undefined> {
     });
 }
 export function htmlEncode(html = ''): string {
-    return html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\//g, '&#x2F;');
+    return html
+        .toString()
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/\//g, '&#x2F;');
 }
 export function isBrowser(): boolean {
     return typeof window !== 'undefined' && window.location !== undefined;
 }
-export function querySelectorAll(selector: string, doc: HTMLDocument = window.document): ReadonlyArray<HTMLElement> {
+export function querySelectorAll(
+    selector: string,
+    doc: HTMLDocument = window.document
+): ReadonlyArray<HTMLElement> {
     return Array.prototype.slice.call(doc.querySelectorAll(selector));
 }
-export function onClick(element: HTMLElement, handler: (arg0: Event) => void): void {
+export function onClick(
+    element: HTMLElement,
+    handler: (arg0: Event) => void
+): void {
     element.addEventListener('touchstart', noop);
     element.addEventListener('click', handler);
     element.addEventListener('keypress', (event: Event) => {
-        // @ts-ignore
-        if (event.keyCode === KEY_CODES.ENTER || event.keyCode === KEY_CODES.SPACE) { // eslint-disable-line unicorn/prefer-event-key
+        if (
+            // @ts-ignore
+            event.keyCode === KEY_CODES.ENTER ||
+            // @ts-ignore
+            event.keyCode === KEY_CODES.SPACE
+        ) {
             return handler(event);
         }
     });
@@ -240,26 +307,34 @@ export function getScript({
     path: string;
     reverse?: boolean;
 }): HTMLScriptElement | null | undefined {
-    return inlineMemoize(getScript, (): HTMLScriptElement | null | undefined => {
-        const url = `${ host }${ path }`;
-        const scripts = Array.prototype.slice.call(document.getElementsByTagName('script'));
+    return inlineMemoize(
+        getScript,
+        (): HTMLScriptElement | null | undefined => {
+            const url = `${ host }${ path }`;
+            const scripts = Array.prototype.slice.call(
+                document.getElementsByTagName('script')
+            );
 
-        if (reverse) {
-            scripts.reverse();
-        }
-
-        for (const script of scripts) {
-            if (!script.src) {
-                continue;
+            if (reverse) {
+                scripts.reverse();
             }
 
-            const src = script.src.replace(/^https?:\/\//, '').split('?')[0];
+            for (const script of scripts) {
+                if (!script.src) {
+                    continue;
+                }
 
-            if (src === url) {
-                return script;
+                const src = script.src
+                    .replace(/^https?:\/\//, '')
+                    .split('?')[0];
+
+                if (src === url) {
+                    return script;
+                }
             }
-        }
-    }, [ path ]);
+        },
+        [ path ]
+    );
 }
 export function isLocalStorageEnabled(): boolean {
     return inlineMemoize(isLocalStorageEnabled, () => {
@@ -271,14 +346,17 @@ export function isLocalStorageEnabled(): boolean {
             if (window.localStorage) {
                 const value = Math.random().toString();
                 window.localStorage.setItem('__test__localStorage__', value);
-                const result = window.localStorage.getItem('__test__localStorage__');
+                const result = window.localStorage.getItem(
+                    '__test__localStorage__'
+                );
                 window.localStorage.removeItem('__test__localStorage__');
 
                 if (value === result) {
                     return true;
                 }
             }
-        } catch (err) { // pass
+        } catch (err) {
+            // pass
         }
 
         return false;
@@ -302,25 +380,30 @@ export function getBrowserLocales(): Array<{
     }
 
     // @ts-ignore can't guarantee that lang won't be undefined with this logic
-    return locales.map(locale => {
-        if (locale && locale.match(/^[a-z]{2}[-_][A-Z]{2}$/)) {
-            const [ lang, country ] = locale.split(/[-_]/);
-            return {
-                country,
-                lang
-            };
-        }
+    return locales
+        .map((locale) => {
+            if (locale && locale.match(/^[a-z]{2}[-_][A-Z]{2}$/)) {
+                const [ lang, country ] = locale.split(/[-_]/);
+                return {
+                    country,
+                    lang
+                };
+            }
 
-        if (locale && locale.match(/^[a-z]{2}$/)) {
-            return {
-                lang: locale
-            };
-        }
+            if (locale && locale.match(/^[a-z]{2}$/)) {
+                return {
+                    lang: locale
+                };
+            }
 
-        return null;
-    }).filter(Boolean);
+            return null;
+        })
+        .filter(Boolean);
 }
-export function appendChild(container: HTMLElement, child: HTMLElement | Text): void {
+export function appendChild(
+    container: HTMLElement,
+    child: HTMLElement | Text
+): void {
     container.appendChild(child);
 }
 export function isElement(element: unknown): boolean {
@@ -328,14 +411,25 @@ export function isElement(element: unknown): boolean {
         return true;
     }
 
-    // @ts-ignore
-    if (element !== null && typeof element === 'object' && element.nodeType === 1 && typeof element.style === 'object' && typeof element.ownerDocument === 'object') {
+    if (
+        element !== null &&
+        typeof element === 'object' &&
+        // @ts-ignore
+        element.nodeType === 1 &&
+        // @ts-ignore
+        typeof element.style === 'object' &&
+        // @ts-ignore
+        typeof element.ownerDocument === 'object'
+    ) {
         return true;
     }
 
     return false;
 }
-export function getElementSafe(id: ElementRefType, doc: Document | HTMLElement = document): HTMLElement  | null | undefined {
+export function getElementSafe(
+    id: ElementRefType,
+    doc: Document | HTMLElement = document
+): HTMLElement | null | undefined {
     if (isElement(id)) {
         // @ts-ignore
         return id;
@@ -345,7 +439,10 @@ export function getElementSafe(id: ElementRefType, doc: Document | HTMLElement =
         return doc.querySelector(id) as HTMLElement;
     }
 }
-export function getElement(id: ElementRefType, doc: Document | HTMLElement = document): HTMLElement {
+export function getElement(
+    id: ElementRefType,
+    doc: Document | HTMLElement = document
+): HTMLElement {
     const element = getElementSafe(id, doc);
 
     if (element) {
@@ -365,7 +462,11 @@ export function elementReady(id: ElementRefType): ZalgoPromise<HTMLElement> {
         }
 
         if (isDocumentReady()) {
-            return reject(new Error(`Document is ready and element ${ name } does not exist`));
+            return reject(
+                new Error(
+                    `Document is ready and element ${ name } does not exist`
+                )
+            );
         }
 
         const interval = setInterval(() => {
@@ -379,7 +480,11 @@ export function elementReady(id: ElementRefType): ZalgoPromise<HTMLElement> {
 
             if (isDocumentReady()) {
                 clearInterval(interval);
-                return reject(new Error(`Document is ready and element ${ name } does not exist`));
+                return reject(
+                    new Error(
+                        `Document is ready and element ${ name } does not exist`
+                    )
+                );
             }
         }, 10);
     });
@@ -398,12 +503,12 @@ type PopupOptions = {
     menubar?: 0 | 1;
     scrollbars?: 0 | 1;
 };
-export function popup(url: string, options?: PopupOptions): CrossDomainWindowType {
+export function popup(
+    url: string,
+    options?: PopupOptions
+): CrossDomainWindowType {
     options = options || {};
-    const {
-        width,
-        height
-    } = options;
+    const { width, height } = options;
     let top = 0;
     let left = 0;
 
@@ -417,7 +522,8 @@ export function popup(url: string, options?: PopupOptions): CrossDomainWindowTyp
 
     if (height) {
         if (window.outerHeight) {
-            top = Math.round((window.outerHeight - height) / 2) + window.screenY;
+            top =
+                Math.round((window.outerHeight - height) / 2) + window.screenY;
         } else if (window.screen.height) {
             top = Math.round((window.screen.height - height) / 2);
         }
@@ -429,31 +535,36 @@ export function popup(url: string, options?: PopupOptions): CrossDomainWindowTyp
             left,
             width,
             height,
-            status:     1,
-            toolbar:    0,
-            menubar:    0,
-            resizable:  1,
-            scrollbars: 1,
+            status:    1,
+            toolbar:   0,
+            menubar:   0,
+            resizable: 1,
+            scrollbars:1,
             ...options
         };
     }
 
     const name = options.name || '';
     delete options.name;
-    // eslint-disable-next-line array-callback-return
-    const params = Object.keys(options).map(key => {
-        // @ts-ignore
-        if (options[key] !== null && options[key] !== undefined) {
-            // @ts-ignore options object is untyped
-            return `${ key }=${ stringify(options[key]) }`;
-        }
-    }).filter(Boolean).join(',');
+    const params = Object.keys(options)
+        // eslint-disable-next-line array-callback-return
+        .map((key) => {
+            // @ts-ignore
+            if (options[key] !== null && options[key] !== undefined) {
+                // @ts-ignore options object is untyped
+                return `${ key }=${ stringify(options[key]) }`;
+            }
+        })
+        .filter(Boolean)
+        .join(',');
     let win: Window | null;
 
     try {
         win = window.open(url, name, params) as Window;
     } catch (err) {
-        throw new PopupOpenError(`Can not open popup window - ${ err.stack || err.message }`);
+        throw new PopupOpenError(
+            `Can not open popup window - ${ err.stack || err.message }`
+        );
     }
 
     if (isWindowClosed(win)) {
@@ -472,12 +583,18 @@ export function writeToWindow(win: SameDomainWindowType, html: string): void {
     } catch (err) {
         try {
             // @ts-ignore
-            win.location = `javascript: document.open(); document.write(${ JSON.stringify(html) }); document.close();`;
-        } catch (err2) { // pass
+            win.location = `javascript: document.open(); document.write(${ JSON.stringify(
+                html
+            ) }); document.close();`;
+        } catch (err2) {
+            // pass
         }
     }
 }
-export function writeElementToWindow(win: SameDomainWindowType, el: HTMLElement): void {
+export function writeElementToWindow(
+    win: SameDomainWindowType,
+    el: HTMLElement
+): void {
     const tag = el.tagName.toLowerCase();
 
     if (tag !== 'html') {
@@ -498,7 +615,11 @@ export function writeElementToWindow(win: SameDomainWindowType, el: HTMLElement)
         documentElement.appendChild(child);
     }
 }
-export function setStyle(el: HTMLElement, styleText: string, doc: Document = window.document): void {
+export function setStyle(
+    el: HTMLElement,
+    styleText: string,
+    doc: Document = window.document
+): void {
     // @ts-ignore
     if (el.styleSheet) {
         // @ts-ignore
@@ -516,8 +637,13 @@ export type ElementOptionsType = {
     html?: string | null | undefined;
 };
 
-let awaitFrameLoadPromises: WeakMap<HTMLIFrameElement, ZalgoPromise<HTMLIFrameElement>>;
-export function awaitFrameLoad(frame: HTMLIFrameElement): ZalgoPromise<HTMLIFrameElement> {
+let awaitFrameLoadPromises: WeakMap<
+    HTMLIFrameElement,
+    ZalgoPromise<HTMLIFrameElement>
+>;
+export function awaitFrameLoad(
+    frame: HTMLIFrameElement
+): ZalgoPromise<HTMLIFrameElement> {
     awaitFrameLoadPromises = awaitFrameLoadPromises || new WeakMap();
 
     if (awaitFrameLoadPromises.has(frame)) {
@@ -528,24 +654,28 @@ export function awaitFrameLoad(frame: HTMLIFrameElement): ZalgoPromise<HTMLIFram
         }
     }
 
-    const promise = new ZalgoPromise<HTMLIFrameElement>((resolve: Function, reject: Function) => {
-        frame.addEventListener('load', () => {
-            linkFrameWindow(frame);
-            resolve(frame);
-        });
-        frame.addEventListener('error', (err: Event) => {
-            if (frame.contentWindow) {
+    const promise = new ZalgoPromise<HTMLIFrameElement>(
+        (resolve: Function, reject: Function) => {
+            frame.addEventListener('load', () => {
+                linkFrameWindow(frame);
                 resolve(frame);
-            } else {
-                reject(err);
-            }
-        });
-    });
+            });
+            frame.addEventListener('error', (err: Event) => {
+                if (frame.contentWindow) {
+                    resolve(frame);
+                } else {
+                    reject(err);
+                }
+            });
+        }
+    );
     awaitFrameLoadPromises.set(frame, promise);
     return promise;
 }
 
-export function awaitFrameWindow(frame: HTMLIFrameElement): ZalgoPromise<CrossDomainWindowType> {
+export function awaitFrameWindow(
+    frame: HTMLIFrameElement
+): ZalgoPromise<CrossDomainWindowType> {
     return awaitFrameLoad(frame).then((loadedFrame: any) => {
         if (!loadedFrame.contentWindow) {
             throw new Error(`Could not find window in iframe`);
@@ -559,7 +689,13 @@ const getDefaultCreateElementOptions = (): ElementOptionsType => {
     return {};
 };
 
-export function createElement(tag = 'div', options: ElementOptionsType = getDefaultCreateElementOptions(), container: HTMLElement | null | undefined): HTMLElement { // eslint-disable-line default-param-last
+export function createElement(
+    // eslint-disable-next-line default-param-last
+    tag = 'div',
+    // eslint-disable-next-line default-param-last
+    options: ElementOptionsType = getDefaultCreateElementOptions(),
+    container: HTMLElement | null | undefined
+): HTMLElement {
     tag = tag.toLowerCase();
     const element = document.createElement(tag);
 
@@ -593,7 +729,9 @@ export function createElement(tag = 'div', options: ElementOptionsType = getDefa
         if (tag === 'iframe') {
             // @ts-ignore
             if (!container || !element.contentWindow) {
-                throw new Error(`Iframe html can not be written unless container provided and iframe in DOM`);
+                throw new Error(
+                    `Iframe html can not be written unless container provided and iframe in DOM`
+                );
             }
 
             // @ts-ignore
@@ -623,7 +761,11 @@ const getDefaultStringMap = (): StringMap => {
     return {};
 };
 
-export function iframe(options: IframeElementOptionsType = getDefaultIframeOptions(), container: HTMLElement | null | undefined): HTMLIFrameElement { // eslint-disable-line default-param-last
+export function iframe(
+    // eslint-disable-next-line default-param-last
+    options: IframeElementOptionsType = getDefaultIframeOptions(),
+    container: HTMLElement | null | undefined
+): HTMLIFrameElement {
     const attributes = options.attributes || getDefaultStringMap();
     const style = options.style || getDefaultStringMap();
     const newAttributes = {
@@ -631,16 +773,16 @@ export function iframe(options: IframeElementOptionsType = getDefaultIframeOptio
         ...attributes
     };
     const newStyle = {
-        backgroundColor: 'transparent',
-        border:          'none',
+        backgroundColor:'transparent',
+        border:         'none',
         ...style
     };
     // @ts-ignore - no 3rd argument for container supplied to createElement
     const frame = createElement('iframe', {
-        attributes: newAttributes,
-        style:      newStyle,
-        html:       options.html,
-        class:      options.class
+        attributes:newAttributes,
+        style:     newStyle,
+        html:      options.html,
+        class:     options.class
     });
     const isIE = window.navigator.userAgent.match(/MSIE|Edge/i);
 
@@ -663,16 +805,24 @@ export function iframe(options: IframeElementOptionsType = getDefaultIframeOptio
     // @ts-ignore
     return frame;
 }
-export function addEventListener(obj: HTMLElement, event: string, handler: (event: Event) => void): CancelableType { // eslint-disable-line no-shadow
+export function addEventListener(
+    obj: HTMLElement,
+    event: string,
+    // eslint-disable-next-line no-shadow
+    handler: (event: Event) => void
+): CancelableType {
     obj.addEventListener(event, handler);
     return {
         cancel() {
             obj.removeEventListener(event, handler);
         }
-
     };
 }
-export function bindEvents(element: HTMLElement, eventNames: ReadonlyArray<string>, handler: (event: Event) => void): CancelableType {
+export function bindEvents(
+    element: HTMLElement,
+    eventNames: ReadonlyArray<string>,
+    handler: (event: Event) => void
+): CancelableType {
     handler = once(handler);
 
     for (const eventName of eventNames) {
@@ -688,7 +838,11 @@ export function bindEvents(element: HTMLElement, eventNames: ReadonlyArray<strin
     };
 }
 const VENDOR_PREFIXES = [ 'webkit', 'moz', 'ms', 'o' ];
-export function setVendorCSS(element: HTMLElement, name: string, value: string): void {
+export function setVendorCSS(
+    element: HTMLElement,
+    name: string,
+    value: string
+): void {
     // @ts-ignore
     element.style[name] = value;
     const capitalizedName = capitalizeFirstLetter(name);
@@ -698,9 +852,24 @@ export function setVendorCSS(element: HTMLElement, name: string, value: string):
         element.style[`${ prefix }${ capitalizedName }`] = value;
     }
 }
-const ANIMATION_START_EVENTS = [ 'animationstart', 'webkitAnimationStart', 'oAnimationStart', 'MSAnimationStart' ];
-const ANIMATION_END_EVENTS = [ 'animationend', 'webkitAnimationEnd', 'oAnimationEnd', 'MSAnimationEnd' ];
-export function animate(element: ElementRefType, name: string, clean: (arg0: (...args: Array<any>) => any) => void, timeout = 1000): ZalgoPromise<void> {
+const ANIMATION_START_EVENTS = [
+    'animationstart',
+    'webkitAnimationStart',
+    'oAnimationStart',
+    'MSAnimationStart'
+];
+const ANIMATION_END_EVENTS = [
+    'animationend',
+    'webkitAnimationEnd',
+    'oAnimationEnd',
+    'MSAnimationEnd'
+];
+export function animate(
+    element: ElementRefType,
+    name: string,
+    clean: (arg0: (...args: Array<any>) => any) => void,
+    timeout = 1000
+): ZalgoPromise<void> {
     // @ts-upgrade TODO - zalgo promise types
     return new ZalgoPromise((resolve: Function, reject: Function) => {
         const el = getElement(element);
@@ -725,7 +894,7 @@ export function animate(element: ElementRefType, name: string, clean: (arg0: (..
             endEvent.cancel();
         }
 
-        startEvent = bindEvents(el, ANIMATION_START_EVENTS, event => {
+        startEvent = bindEvents(el, ANIMATION_START_EVENTS, (event) => {
             // @ts-ignore
             if (event.target !== el || event.animationName !== name) {
                 return;
@@ -740,7 +909,7 @@ export function animate(element: ElementRefType, name: string, clean: (arg0: (..
                 resolve();
             }, timeout);
         });
-        endEvent = bindEvents(el, ANIMATION_END_EVENTS, event => {
+        endEvent = bindEvents(el, ANIMATION_END_EVENTS, (event) => {
             // @ts-ignore
             if (event.target !== el || event.animationName !== name) {
                 return;
@@ -748,10 +917,16 @@ export function animate(element: ElementRefType, name: string, clean: (arg0: (..
 
             cleanUp();
 
-            // @ts-ignore
-            if (typeof event.animationName === 'string' && event.animationName !== name) {
+            if (
                 // @ts-ignore
-                return reject(`Expected animation name to be ${ name }, found ${ event.animationName }`);
+                typeof event.animationName === 'string' &&
+                // @ts-ignore
+                event.animationName !== name
+            ) {
+                return reject(
+                    // @ts-ignore
+                    `Expected animation name to be ${ name }, found ${ event.animationName }`
+                );
             }
 
             return resolve();
@@ -786,12 +961,20 @@ export function destroyElement(element: HTMLElement): void {
         element.parentNode.removeChild(element);
     }
 }
-export function showAndAnimate(element: HTMLElement, name: string, clean: (arg0: (...args: Array<any>) => any) => void): ZalgoPromise<void> {
+export function showAndAnimate(
+    element: HTMLElement,
+    name: string,
+    clean: (arg0: (...args: Array<any>) => any) => void
+): ZalgoPromise<void> {
     const animation = animate(element, name, clean);
     showElement(element);
     return animation;
 }
-export function animateAndHide(element: HTMLElement, name: string, clean: (arg0: (...args: Array<any>) => any) => void): ZalgoPromise<void> {
+export function animateAndHide(
+    element: HTMLElement,
+    name: string,
+    clean: (arg0: (...args: Array<any>) => any) => void
+): ZalgoPromise<void> {
     return animate(element, name, clean).then(() => {
         hideElement(element);
     });
@@ -803,13 +986,22 @@ export function removeClass(element: HTMLElement, name: string): void {
     element.classList.remove(name);
 }
 export function isElementClosed(el: HTMLElement): boolean {
-    if (!el || !el.parentNode || !el.ownerDocument || !el.ownerDocument.documentElement || !el.ownerDocument.documentElement.contains(el)) {
+    if (
+        !el ||
+        !el.parentNode ||
+        !el.ownerDocument ||
+        !el.ownerDocument.documentElement ||
+        !el.ownerDocument.documentElement.contains(el)
+    ) {
         return true;
     }
 
     return false;
 }
-export function watchElementForClose(element: HTMLElement, handler: () => unknown): CancelableType {
+export function watchElementForClose(
+    element: HTMLElement,
+    handler: () => unknown
+): CancelableType {
     handler = once(handler);
     let cancelled = false;
     const mutationObservers: MutationObserver[] = [];
@@ -896,7 +1088,10 @@ export function watchElementForClose(element: HTMLElement, handler: () => unknow
         cancel
     };
 }
-export function fixScripts(el: HTMLElement, doc: Document = window.document): void {
+export function fixScripts(
+    el: HTMLElement,
+    doc: Document = window.document
+): void {
     // @ts-ignore - querySelectorAll takes a document not element
     for (const script of querySelectorAll('script', el)) {
         const parentNode = script.parentNode;
@@ -917,23 +1112,24 @@ type OnResizeOptions = {
     interval?: number;
     win?: SameDomainWindowType;
 };
-export function onResize(el: HTMLElement, handler: (arg0: {
-    width: number;
-    height: number;
-}) => void, {
-    width = true,
-    height = true,
-    interval = 100,
-    win = window
-}: OnResizeOptions = {}): {
+export function onResize(
+    el: HTMLElement,
+    handler: (arg0: { width: number; height: number }) => void,
+    {
+        width = true,
+        height = true,
+        interval = 100,
+        win = window
+    }: OnResizeOptions = {}
+): {
     cancel: () => void;
 } {
     let currentWidth = el.offsetWidth;
     let currentHeight = el.offsetHeight;
     let canceled = false;
     handler({
-        width:  currentWidth,
-        height: currentHeight
+        width: currentWidth,
+        height:currentHeight
     });
 
     const check = () => {
@@ -944,10 +1140,13 @@ export function onResize(el: HTMLElement, handler: (arg0: {
         const newWidth = el.offsetWidth;
         const newHeight = el.offsetHeight;
 
-        if (width && newWidth !== currentWidth || height && newHeight !== currentHeight) {
+        if (
+            (width && newWidth !== currentWidth) ||
+            (height && newHeight !== currentHeight)
+        ) {
             handler({
-                width:  newWidth,
-                height: newHeight
+                width: newWidth,
+                height:newHeight
             });
         }
 
@@ -970,10 +1169,10 @@ export function onResize(el: HTMLElement, handler: (arg0: {
         // @ts-ignore
         observer = new win.MutationObserver(check);
         observer.observe(el, {
-            attributes:    true,
-            childList:     true,
-            subtree:       true,
-            characterData: false
+            attributes:   true,
+            childList:    true,
+            subtree:      true,
+            characterData:false
         });
         timeout = safeInterval(check, interval * 10);
     } else {
@@ -1005,7 +1204,12 @@ export function getResourceLoadTime(url: string): number | null | undefined {
     for (let i = 0; i < entries.length; i++) {
         const entry = entries[i];
 
-        if (entry && entry.name && entry.name.indexOf(url) === 0 && typeof entry.duration === 'number') {
+        if (
+            entry &&
+            entry.name &&
+            entry.name.indexOf(url) === 0 &&
+            typeof entry.duration === 'number'
+        ) {
             return Math.floor(entry.duration);
         }
     }
@@ -1082,24 +1286,28 @@ export function getStackTrace(): string {
 function inferCurrentScript(): HTMLScriptElement | null | undefined {
     try {
         const stack = getStackTrace();
-        const stackDetails = (/.*at [^(]*\((.*):(.+):(.+)\)$/ig).exec(stack);
+        const stackDetails = (/.*at [^(]*\((.*):(.+):(.+)\)$/gi).exec(stack);
         const scriptLocation = stackDetails && stackDetails[1];
 
         if (!scriptLocation) {
             return;
         }
 
-        for (const script of Array.prototype.slice.call(document.getElementsByTagName('script')).reverse()) {
+        for (const script of Array.prototype.slice
+            .call(document.getElementsByTagName('script'))
+            .reverse()) {
             if (script.src && script.src === scriptLocation) {
                 return script;
             }
         }
-    } catch (err) { // pass
+    } catch (err) {
+        // pass
     }
 }
 
-// eslint-disable-next-line compat/compat
-let currentScript = typeof document !== 'undefined' ? document.currentScript : null;
+let currentScript =
+    // eslint-disable-next-line compat/compat
+    typeof document !== 'undefined' ? document.currentScript : null;
 type GetCurrentScript = () => HTMLScriptElement;
 // @ts-ignore = need memo helper
 export const getCurrentScript: GetCurrentScript = memoize(() => {
@@ -1140,16 +1348,15 @@ export const getCurrentScriptUID: GetCurrentScriptUID = memoize(() => {
     }
 
     if (script.src) {
-        const {
-            src,
-            dataset
-        } = script;
+        const { src, dataset } = script;
         const stringToHash = JSON.stringify({
             src,
             dataset
         });
         const hashedString = strHashStr(stringToHash);
-        const hashResult = hashedString.slice(hashedString.length - UID_HASH_LENGTH);
+        const hashResult = hashedString.slice(
+            hashedString.length - UID_HASH_LENGTH
+        );
         uid = `uid_${ hashResult }`;
     } else {
         uid = uniqueID();

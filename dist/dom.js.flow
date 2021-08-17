@@ -137,8 +137,8 @@ declare export function awaitFrameWindow(
   frame: HTMLIFrameElement
 ): ZalgoPromise<CrossDomainWindowType>;
 declare export function createElement(
-  tag: string | void,
-  options: ElementOptionsType | void,
+  tag: string,
+  options: ElementOptionsType,
   container: HTMLElement | null | void
 ): HTMLElement;
 declare type StringMap = { [key: string]: string, ... };
@@ -152,7 +152,7 @@ export type IframeElementOptionsType = {
   ...
 };
 declare export function iframe(
-  options: IframeElementOptionsType | void,
+  options: IframeElementOptionsType,
   container: HTMLElement | null | void
 ): HTMLIFrameElement;
 declare export function addEventListener(

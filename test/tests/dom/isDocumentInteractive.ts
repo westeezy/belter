@@ -2,11 +2,13 @@ import { isDocumentInteractive } from '../../../src';
 
 describe('document interactive cases', () => {
     it('should return false when document is not interactive', () => {
-    // document.readyState will be equal to 'complete' as it was set to be in the last test
+        // document.readyState will be equal to 'complete' as it was set to be in the last test
         const result = isDocumentInteractive();
 
         if (result) {
-            throw new Error(`Expected result to be true, got ${ String(result) }`);
+            throw new Error(
+                `Expected result to be true, got ${ String(result) }`
+            );
         }
     });
     it('should return true when document is interactive', () => {
@@ -19,7 +21,9 @@ describe('document interactive cases', () => {
         document.readyState = oldState;
 
         if (!result) {
-            throw new Error(`Expected result to equal true, got ${ String(result) }`);
+            throw new Error(
+                `Expected result to equal true, got ${ String(result) }`
+            );
         }
     });
 });

@@ -1,4 +1,12 @@
-import { isPerc, isPx, toNum, toPx, toCSS, percOf, normalizeDimension } from '../../src/css';
+import {
+    isPerc,
+    isPx,
+    toNum,
+    toPx,
+    toCSS,
+    percOf,
+    normalizeDimension
+} from '../../src/css';
 
 describe('Css test cases', () => {
     it('should return false when given string', () => {
@@ -6,7 +14,11 @@ describe('Css test cases', () => {
         const expectedResult = false;
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return true when given percentage', () => {
@@ -14,7 +26,11 @@ describe('Css test cases', () => {
         const expectedResult = true;
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return false when given number', () => {
@@ -22,7 +38,11 @@ describe('Css test cases', () => {
         const expectedResult = false;
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return true when given a value in px', () => {
@@ -30,7 +50,11 @@ describe('Css test cases', () => {
         const expectedResult = true;
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return number when given a percentage', () => {
@@ -38,7 +62,11 @@ describe('Css test cases', () => {
         const expectedResult = 42;
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return number when given a value in px', () => {
@@ -46,7 +74,11 @@ describe('Css test cases', () => {
         const expectedResult = 42;
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return number when given a number', () => {
@@ -54,7 +86,11 @@ describe('Css test cases', () => {
         const expectedResult = 42;
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return an error when given a string', () => {
@@ -72,7 +108,11 @@ describe('Css test cases', () => {
         const expectedResult = '42px';
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return a px value when given a percentage', () => {
@@ -80,7 +120,11 @@ describe('Css test cases', () => {
         const expectedResult = '42px';
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return a px value when given a px value', () => {
@@ -88,7 +132,11 @@ describe('Css test cases', () => {
         const expectedResult = '42px';
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return a px value when given a number', () => {
@@ -96,7 +144,11 @@ describe('Css test cases', () => {
         const expectedResult = '42px';
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return a percentage value when given a percentage', () => {
@@ -104,7 +156,11 @@ describe('Css test cases', () => {
         const expectedResult = '42%';
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return a px value when given a px value', () => {
@@ -112,7 +168,11 @@ describe('Css test cases', () => {
         const expectedResult = '42px';
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return the percentage of a value when given a number and a percentage', () => {
@@ -120,7 +180,11 @@ describe('Css test cases', () => {
         const expectedResult = 5;
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return a percentage value when given a percentage dimension', () => {
@@ -128,7 +192,11 @@ describe('Css test cases', () => {
         const expectedResult = 5;
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return a px value when given a px dimension', () => {
@@ -136,7 +204,11 @@ describe('Css test cases', () => {
         const expectedResult = 50;
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return a number when given a number dimension', () => {
@@ -144,7 +216,11 @@ describe('Css test cases', () => {
         const expectedResult = 50;
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ JSON.stringify(expectedResult) }, got ${ JSON.stringify(result) }`);
+            throw new Error(
+                `Expected result to equal ${ JSON.stringify(
+                    expectedResult
+                ) }, got ${ JSON.stringify(result) }`
+            );
         }
     });
     it('should return an error when given a string dimension', () => {

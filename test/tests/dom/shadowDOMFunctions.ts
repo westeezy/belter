@@ -1,4 +1,9 @@
-import { isShadowElement, getShadowRoot, getShadowHost, insertShadowSlot } from '../../../src';
+import {
+    isShadowElement,
+    getShadowRoot,
+    getShadowHost,
+    insertShadowSlot
+} from '../../../src';
 // This component is needed for testing the case when shadowRoot and shadowDOM are the same
 const customWebWrapper = class extends HTMLElement {
     constructor() {
@@ -10,7 +15,6 @@ const customWebWrapper = class extends HTMLElement {
         shadowDOMContainer.setAttribute('id', 'inner-host-div');
         shadowRoot.appendChild(shadowDOMContainer);
     }
-
 };
 const customWebComponent = class extends HTMLElement {
     constructor() {
@@ -26,7 +30,6 @@ const customWebComponent = class extends HTMLElement {
         shadowDOMContainer.appendChild(testSpan);
         shadowHost.appendChild(shadowDOMContainer);
     }
-
 };
 customElements.define('custom-web-component', customWebComponent);
 customElements.define('custom-wrapper', customWebWrapper);
@@ -50,7 +53,9 @@ describe('Web components', () => {
     });
     describe('isShadowElement cases', () => {
         it('should return true if parent node is shadow root', () => {
-            const innerElement = document.querySelector('custom-web-component')?.shadowRoot?.querySelector('#inner-span');
+            const innerElement = document
+                .querySelector('custom-web-component')
+                ?.shadowRoot?.querySelector('#inner-span');
 
             if (!innerElement) {
                 throw new Error('unable to find inner element');
@@ -59,7 +64,9 @@ describe('Web components', () => {
             const result = isShadowElement(innerElement);
 
             if (!result) {
-                throw new Error(`Expected result to be true, got ${ String(result) }`);
+                throw new Error(
+                    `Expected result to be true, got ${ String(result) }`
+                );
             }
         });
         it('should return false if parent node is not shadow root', () => {
@@ -67,13 +74,17 @@ describe('Web components', () => {
             const result = isShadowElement(testElement);
 
             if (result) {
-                throw new Error(`Expected result to be false, got ${ String(result) }`);
+                throw new Error(
+                    `Expected result to be false, got ${ String(result) }`
+                );
             }
         });
     });
     describe('getShadowRoot cases', () => {
         it('should return shadow root', () => {
-            const innerElement = document.querySelector('custom-web-component')?.shadowRoot?.querySelector('#inner-span');
+            const innerElement = document
+                .querySelector('custom-web-component')
+                ?.shadowRoot?.querySelector('#inner-span');
 
             if (!innerElement) {
                 throw new Error('unable to find inner element');
@@ -87,13 +98,17 @@ describe('Web components', () => {
 
             // @ts-ignore
             if (!result.toString() === '[object ShadowRoot]') {
-                throw new Error(`should have returned '[object ShadowRoot]', got ${ result.toString() }`);
+                throw new Error(
+                    `should have returned '[object ShadowRoot]', got ${ result.toString() }`
+                );
             }
         });
     });
     describe('getShadowHost cases', () => {
         it('should return shadow host if exists', () => {
-            const innerElement = document.querySelector('custom-web-component')?.shadowRoot?.querySelector('#inner-span');
+            const innerElement = document
+                .querySelector('custom-web-component')
+                ?.shadowRoot?.querySelector('#inner-span');
 
             if (!innerElement) {
                 throw new Error('unable to find inner element');
@@ -102,13 +117,17 @@ describe('Web components', () => {
             const result = getShadowHost(innerElement);
 
             if (!result) {
-                throw new Error(`should have returned the inner element, got undefined`);
+                throw new Error(
+                    `should have returned the inner element, got undefined`
+                );
             }
 
             const hostId = result.getAttribute('id');
 
             if (hostId && hostId !== 'shadow-host') {
-                throw new Error(`should have returned 'shadow-host', got ${ hostId }`);
+                throw new Error(
+                    `should have returned 'shadow-host', got ${ hostId }`
+                );
             }
         });
     });
@@ -124,11 +143,15 @@ describe('Web components', () => {
             }
 
             if (!insertShadowSlotError.match(/Element is not in shadow dom/i)) {
-                throw new Error(`should have thrown 'Element is not in shadow dom' exception, got: ${ insertShadowSlotError }`);
+                throw new Error(
+                    `should have thrown 'Element is not in shadow dom' exception, got: ${ insertShadowSlotError }`
+                );
             }
         });
         it('should return slotProvider ', () => {
-            const innerElement = document.querySelector('custom-web-component')?.shadowRoot?.querySelector('#inner-span');
+            const innerElement = document
+                .querySelector('custom-web-component')
+                ?.shadowRoot?.querySelector('#inner-span');
 
             if (!innerElement) {
                 throw new Error('unable to find inner element');
@@ -138,7 +161,9 @@ describe('Web components', () => {
             const result = insertShadowSlot(innerElement);
 
             if (!result) {
-                throw new Error('should have returned an element, got undefined');
+                throw new Error(
+                    'should have returned an element, got undefined'
+                );
             }
 
             if (!result?.getAttribute('slot')?.match(/shadow-slot-/i)) {
@@ -149,7 +174,9 @@ describe('Web components', () => {
             // TestCase components setup
             const customWrapper = document.createElement('custom-wrapper');
             customWrapper.setAttribute('id', 'custom-wrapper-id');
-            const customComponent = document.createElement('custom-web-component');
+            const customComponent = document.createElement(
+                'custom-web-component'
+            );
             customComponent.setAttribute('id', 'custom-component-id');
             const innerSpan = document.createElement('span');
             innerSpan.setAttribute('id', 'inner-span');
@@ -169,22 +196,24 @@ describe('Web components', () => {
             }
 
             /**
-       * At this point the HTML structure looks like this:
-       * <html>
-       *    ...
-       *    <custom-wrapper id="custom-wrapper-id">
-       *         #shadow-root (open)
-       *           <custom-web-component id="custom-component-id">
-       *              #shadow-root (open)
-       *                <span id="inner-span"></span>
-       *           </custom-web-component>
-       *    </custom-wrapper>
-       * </html>
-       */
+             * At this point the HTML structure looks like this:
+             * <html>
+             *    ...
+             *    <custom-wrapper id="custom-wrapper-id">
+             *         #shadow-root (open)
+             *           <custom-web-component id="custom-component-id">
+             *              #shadow-root (open)
+             *                <span id="inner-span"></span>
+             *           </custom-web-component>
+             *    </custom-wrapper>
+             * </html>
+             */
             const slotProvider = insertShadowSlot(innerSpan);
 
             if (!slotProvider) {
-                throw new Error('should have returned an element, got undefined');
+                throw new Error(
+                    'should have returned an element, got undefined'
+                );
             }
 
             if (!slotProvider?.getAttribute('slot')?.match(/shadow-slot-/i)) {

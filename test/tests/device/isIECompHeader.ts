@@ -14,7 +14,8 @@ describe('isIECompHeader', () => {
     });
     it('should return false when mHttp is falsy', () => {
         // @ts-ignore
-        window.document.querySelector = elem => elem !== 'meta[http-equiv="X-UA-Compatible"]';
+        window.document.querySelector = (elem) =>
+            elem !== 'meta[http-equiv="X-UA-Compatible"]';
 
         const bool = isIECompHeader();
 
@@ -24,7 +25,8 @@ describe('isIECompHeader', () => {
     });
     it('should return false when mContent is falsy', () => {
         // @ts-ignore
-        window.document.querySelector = elem => elem !== 'meta[content="IE=edge"]';
+        window.document.querySelector = (elem) =>
+            elem !== 'meta[content="IE=edge"]';
 
         const bool = isIECompHeader();
 

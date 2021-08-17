@@ -13,7 +13,6 @@ Object.defineProperty(document, 'readyState', {
         // @ts-ignore
         oldReadyState = newState;
     }
-
 });
 // eslint-disable-next-line compat/compat
 let oldBody = document.body;
@@ -27,5 +26,4 @@ Object.defineProperty(document, 'body', {
         // @ts-ignore
         oldBody = newBody;
     }
-
 });

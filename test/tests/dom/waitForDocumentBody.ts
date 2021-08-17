@@ -7,7 +7,7 @@ describe('waitForDocumentBody cases', () => {
     const testBody = document.createElement('body');
     beforeEach(memoize.clear);
     afterEach(() => {
-    // eslint-disable-next-line compat/compat
+        // eslint-disable-next-line compat/compat
         document.body = oldBody;
     });
     it('should resolve when body is present', async () => {

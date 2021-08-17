@@ -17,8 +17,8 @@ type ResponseType = {
     body: Record<string, any>;
 };
 const HEADERS = {
-    CONTENT_TYPE: 'content-type',
-    ACCEPT:       'accept'
+    CONTENT_TYPE:'content-type',
+    ACCEPT:      'accept'
 };
 const headerBuilders: Function[] = [];
 
@@ -45,8 +45,10 @@ export function request({
 }: RequestOptionsType): ZalgoPromise<ResponseType> {
     // ts-upgrade TODO add zalgo promise types
     return new ZalgoPromise((resolve: Function, reject: Function) => {
-        if (json && data || json && body || data && json) {
-            throw new Error(`Only options.json or options.data or options.body should be passed`);
+        if ((json && data) || (json && body) || (data && json)) {
+            throw new Error(
+                `Only options.json or options.data or options.body should be passed`
+            );
         }
 
         const normalizedHeaders: Record<string, string> = {};
@@ -56,12 +58,16 @@ export function request({
         }
 
         if (json) {
-            normalizedHeaders[HEADERS.CONTENT_TYPE] = normalizedHeaders[HEADERS.CONTENT_TYPE] || 'application/json';
+            normalizedHeaders[HEADERS.CONTENT_TYPE] =
+                normalizedHeaders[HEADERS.CONTENT_TYPE] || 'application/json';
         } else if (data || body) {
-            normalizedHeaders[HEADERS.CONTENT_TYPE] = normalizedHeaders[HEADERS.CONTENT_TYPE] || 'application/x-www-form-urlencoded; charset=utf-8';
+            normalizedHeaders[HEADERS.CONTENT_TYPE] =
+                normalizedHeaders[HEADERS.CONTENT_TYPE] ||
+                'application/x-www-form-urlencoded; charset=utf-8';
         }
 
-        normalizedHeaders[HEADERS.ACCEPT] = normalizedHeaders[HEADERS.ACCEPT] || 'application/json';
+        normalizedHeaders[HEADERS.ACCEPT] =
+            normalizedHeaders[HEADERS.ACCEPT] || 'application/json';
 
         for (const headerBuilder of headerBuilders) {
             const builtHeaders = headerBuilder();
@@ -73,40 +79,63 @@ export function request({
 
         // @ts-ignore
         const xhr = new win.XMLHttpRequest();
-        xhr.addEventListener('load', function xhrLoad(): void {
-            // @ts-ignore no annotation for this
-            const responseHeaders = parseHeaders(this.getAllResponseHeaders());
-
-            // @ts-ignore no annotation for this
-            if (!this.status) {
-                return reject(new Error(`Request to ${ method.toLowerCase() } ${ url } failed: no response status code.`));
-            }
-
-            const contentType = responseHeaders['content-type'];
-            const isJSON = contentType && (contentType.indexOf('application/json') === 0 || contentType.indexOf('text/json') === 0);
-            // @ts-ignore no annotation for this
-            let responseBody = this.responseText;
-
-            try {
-                responseBody = JSON.parse(responseBody);
-            } catch (err) {
-                if (isJSON) {
+        xhr.addEventListener(
+            'load',
+            function xhrLoad(): void {
+                const responseHeaders = parseHeaders(
                     // @ts-ignore no annotation for this
-                    return reject(new Error(`Invalid json: ${ this.responseText }.`));
-                }
-            }
+                    this.getAllResponseHeaders()
+                );
 
-            const res = {
                 // @ts-ignore no annotation for this
-                status:  this.status,
-                headers: responseHeaders,
-                body:    responseBody
-            };
-            return resolve(res);
-        }, false);
-        xhr.addEventListener('error', (evt: Event) => {
-            reject(new Error(`Request to ${ method.toLowerCase() } ${ url } failed: ${ evt.toString() }.`));
-        }, false);
+                if (!this.status) {
+                    return reject(
+                        new Error(
+                            `Request to ${ method.toLowerCase() } ${ url } failed: no response status code.`
+                        )
+                    );
+                }
+
+                const contentType = responseHeaders['content-type'];
+                const isJSON =
+                    contentType &&
+                    (contentType.indexOf('application/json') === 0 ||
+                        contentType.indexOf('text/json') === 0);
+                // @ts-ignore no annotation for this
+                let responseBody = this.responseText;
+
+                try {
+                    responseBody = JSON.parse(responseBody);
+                } catch (err) {
+                    if (isJSON) {
+                        return reject(
+                            // @ts-ignore no annotation for this
+                            new Error(`Invalid json: ${ this.responseText }.`)
+                        );
+                    }
+                }
+
+                const res = {
+                    // @ts-ignore no annotation for this
+                    status: this.status,
+                    headers:responseHeaders,
+                    body:   responseBody
+                };
+                return resolve(res);
+            },
+            false
+        );
+        xhr.addEventListener(
+            'error',
+            (evt: Event) => {
+                reject(
+                    new Error(
+                        `Request to ${ method.toLowerCase() } ${ url } failed: ${ evt.toString() }.`
+                    )
+                );
+            },
+            false
+        );
         xhr.open(method, url, true);
 
         for (const key in normalizedHeaders) {
@@ -118,15 +147,23 @@ export function request({
         if (json) {
             body = JSON.stringify(json);
         } else if (data) {
-            body = Object.keys(data).map(key => {
-                return `${ encodeURIComponent(key) }=${ data ? encodeURIComponent(data[key]) : '' }`;
-            }).join('&');
+            body = Object.keys(data)
+                .map((key) => {
+                    return `${ encodeURIComponent(key) }=${
+                        data ? encodeURIComponent(data[key]) : ''
+                    }`;
+                })
+                .join('&');
         }
 
         xhr.timeout = timeout;
 
         xhr.ontimeout = function xhrTimeout() {
-            reject(new Error(`Request to ${ method.toLowerCase() } ${ url } has timed out`));
+            reject(
+                new Error(
+                    `Request to ${ method.toLowerCase() } ${ url } has timed out`
+                )
+            );
         };
 
         xhr.send(body);

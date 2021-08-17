@@ -7,7 +7,9 @@ describe('url encode cases', () => {
         const expectedResult = encodeURIComponent(url);
 
         if (result !== expectedResult) {
-            throw new Error(`Expected result to equal ${ expectedResult }, got ${ result }`);
+            throw new Error(
+                `Expected result to equal ${ expectedResult }, got ${ result }`
+            );
         }
     });
 });

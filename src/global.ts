@@ -11,12 +11,12 @@ export function getGlobalNameSpace<T extends Record<string, any>>({
 } {
     const global = getGlobal();
     const globalKey = `__${ name }__${ version }_global__`;
-    const namespace = global[globalKey] = global[globalKey] || {};
+    const namespace = (global[globalKey] = global[globalKey] || {});
     return {
         get: (key: string, defValue?: T): T => {
             // @ts-ignore
             defValue = defValue || {};
-            const item = namespace[key] = namespace[key] || defValue;
+            const item = (namespace[key] = namespace[key] || defValue);
             return item;
         }
     };

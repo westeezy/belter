@@ -37,15 +37,16 @@ function getRandomInteger(range: number): number {
 function getThrottlePercentile(name: string): number {
     return getBelterExperimentStorage().getState((state: any) => {
         state.throttlePercentiles = state.throttlePercentiles || {};
-        state.throttlePercentiles[name] = state.throttlePercentiles[name] || getRandomInteger(100);
+        state.throttlePercentiles[name] =
+            state.throttlePercentiles[name] || getRandomInteger(100);
         return state.throttlePercentiles[name];
     });
 }
 
 const THROTTLE_GROUP = {
-    TEST:     'test',
-    CONTROL:  'control',
-    THROTTLE: 'throttle'
+    TEST:    'test',
+    CONTROL: 'control',
+    THROTTLE:'throttle'
 };
 type ExperimentOptions = {
     name: string;
@@ -72,13 +73,15 @@ export function experiment({
     logCheckpoint = noop,
     sticky = true
 }: ExperimentOptions): Experiment {
-    const throttle = sticky ? getThrottlePercentile(name) : getRandomInteger(100);
+    const throttle = sticky
+        ? getThrottlePercentile(name)
+        : getRandomInteger(100);
     let group: string;
 
     // @ts-ignore __TEST__ global for test env
     if (throttle < sample && !__TEST__) {
         group = THROTTLE_GROUP.TEST;
-    } else if (sample >= 50 || sample <= throttle && throttle < sample * 2) {
+    } else if (sample >= 50 || (sample <= throttle && throttle < sample * 2)) {
         group = THROTTLE_GROUP.CONTROL;
     } else {
         group = THROTTLE_GROUP.THROTTLE;
@@ -92,7 +95,8 @@ export function experiment({
         if (window.localStorage && window.localStorage.getItem(name)) {
             forced = true;
         }
-    } catch (err) { // pass
+    } catch (err) {
+        // pass
     }
 
     const exp = {
@@ -122,7 +126,11 @@ export function experiment({
                 });
             }
 
-            if (isEventUnique(`${ treatment }_${ checkpoint }_${ JSON.stringify(payload) }`)) {
+            if (
+                isEventUnique(
+                    `${ treatment }_${ checkpoint }_${ JSON.stringify(payload) }`
+                )
+            ) {
                 logCheckpoint({
                     name,
                     treatment,
@@ -143,7 +151,6 @@ export function experiment({
         logComplete(payload: Payload = {}): Experiment {
             return exp.log(`complete`, payload);
         }
-
     };
     return exp;
 }

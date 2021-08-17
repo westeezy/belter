@@ -10,7 +10,9 @@ describe('isDocumentReady cases', () => {
         document.readyState = oldState;
 
         if (result) {
-            throw new Error(`Expected result to be false, got ${ String(result) }`);
+            throw new Error(
+                `Expected result to be false, got ${ String(result) }`
+            );
         }
     });
     it('should return true when document is ready', () => {
@@ -21,7 +23,9 @@ describe('isDocumentReady cases', () => {
         document.readyState = oldState;
 
         if (!result) {
-            throw new Error(`Expected result to be true, got ${ String(result) }`);
+            throw new Error(
+                `Expected result to be true, got ${ String(result) }`
+            );
         }
     });
 });

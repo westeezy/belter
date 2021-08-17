@@ -22,7 +22,9 @@ describe('waitForDocumentReady cases', () => {
             }, 20);
             await waitForDocumentReady();
         } catch (err) {
-            throw new Error(`Expected waitForDocumentReady to eventully resolve when document is ready: ${ err.message }`);
+            throw new Error(
+                `Expected waitForDocumentReady to eventully resolve when document is ready: ${ err.message }`
+            );
         }
     });
 });
