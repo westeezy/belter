@@ -1,9 +1,18 @@
-/* @flow */
-
 module.exports = {
-    'extends': require.resolve('grumbler-scripts/config/.eslintrc-browser'),
+  'extends': './node_modules/grumbler-scripts/config/.eslintrc-browser.js',
 
-    'rules': {
-        'default-param-last': 'off'
-    }
+  ignorePatterns: ["**/node_modules/**"],
+
+  // TODO: revert to what it use to be
+  //
+  "globals": {
+    "NodeJS": true
+  },
+
+  'rules': {
+    'promise/no-native': 'off',
+    'no-restricted-globals': 'off',
+    "no-mixed-operators": 'off',
+    "@typescript-eslint/ban-types": "off"
+  }
 };
