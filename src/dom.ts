@@ -94,10 +94,10 @@ export function waitForDocumentBody(): ZalgoPromise<
         });
     });
 }
-export function parseQuery(queryString: string): Record<string, any> {
+export function parseQuery(queryString: string): Record<string, string> {
     return inlineMemoize(
         parseQuery,
-        (): Record<string, any> => {
+        (): Record<string, string> => {
             const params = {};
 
             if (!queryString) {
@@ -676,7 +676,7 @@ export function awaitFrameLoad(
 export function awaitFrameWindow(
     frame: HTMLIFrameElement
 ): ZalgoPromise<CrossDomainWindowType> {
-    return awaitFrameLoad(frame).then((loadedFrame: any) => {
+    return awaitFrameLoad(frame).then((loadedFrame: HTMLIFrameElement) => {
         if (!loadedFrame.contentWindow) {
             throw new Error(`Could not find window in iframe`);
         }
@@ -867,7 +867,7 @@ const ANIMATION_END_EVENTS = [
 export function animate(
     element: ElementRefType,
     name: string,
-    clean: (arg0: (...args: Array<any>) => any) => void,
+    clean: (arg0: (...args: Array<unknown>) => void) => void,
     timeout = 1000
 ): ZalgoPromise<void> {
     // @ts-upgrade TODO - zalgo promise types
@@ -964,7 +964,7 @@ export function destroyElement(element: HTMLElement): void {
 export function showAndAnimate(
     element: HTMLElement,
     name: string,
-    clean: (arg0: (...args: Array<any>) => any) => void
+    clean: (arg0: (...args: Array<unknown>) => unknown) => void
 ): ZalgoPromise<void> {
     const animation = animate(element, name, clean);
     showElement(element);
@@ -973,7 +973,7 @@ export function showAndAnimate(
 export function animateAndHide(
     element: HTMLElement,
     name: string,
-    clean: (arg0: (...args: Array<any>) => any) => void
+    clean: (arg0: (...args: Array<unknown>) => unknown) => void
 ): ZalgoPromise<void> {
     return animate(element, name, clean).then(() => {
         hideElement(element);

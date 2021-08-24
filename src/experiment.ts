@@ -1,14 +1,14 @@
 import { noop } from './util';
-import { getStorage } from './storage';
+import { getStorage, Storage } from './storage';
 
-function getBelterExperimentStorage(): Record<string, any> {
+function getBelterExperimentStorage(): Storage {
     return getStorage({
         name: 'belter_experiment'
     });
 }
 
 function isEventUnique(name: string): boolean {
-    return getBelterExperimentStorage().getSessionState((state: any) => {
+    return getBelterExperimentStorage().getSessionState((state) => {
         state.loggedBeacons = state.loggedBeacons || [];
 
         if (state.loggedBeacons.indexOf(name) === -1) {
@@ -35,7 +35,7 @@ function getRandomInteger(range: number): number {
 }
 
 function getThrottlePercentile(name: string): number {
-    return getBelterExperimentStorage().getState((state: any) => {
+    return getBelterExperimentStorage().getState((state) => {
         state.throttlePercentiles = state.throttlePercentiles || {};
         state.throttlePercentiles[name] =
             state.throttlePercentiles[name] || getRandomInteger(100);

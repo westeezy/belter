@@ -1,6 +1,6 @@
 import { getGlobal } from './util';
 
-export function getGlobalNameSpace<T extends Record<string, any>>({
+export function getGlobalNameSpace<T extends Record<string, T>>({
     name,
     version = 'latest'
 }: {

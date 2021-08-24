@@ -2,12 +2,12 @@ import { extend } from '../../../src';
 
 describe('extend cases', () => {
     it('should add keys from one object to another', () => {
-        const obj1: Record<string, any> = {
+        const obj1: Record<string, number> = {
             foo:1,
             bar:2,
             baz:3
         };
-        const obj2: Record<string, any> = {
+        const obj2: Record<string, number> = {
             blep: 4,
             blop: 5,
             bloop:6

@@ -1,12 +1,14 @@
 import { uniqueID, getGlobal, inlineMemoize } from './util';
 import { isLocalStorageEnabled } from './dom';
 
-type Getter<T> = (handler: (arg0: Record<string, any>) => T) => T;
+type Getter<T> = (handler: (arg0: Record<string, T>) => T) => T;
 
 export type Storage = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getState: Getter<any>;
     getID: () => string;
     isStateFresh: () => boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getSessionState: Getter<any>;
     getSessionID: () => string;
 };
@@ -26,6 +28,7 @@ export function getStorage({
             let accessedStorage: WindowLocalStorage | null; // eslint-disable-line no-undef
 
             function getState<T>(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 handler: (storage: Record<string, any>) => T
             ): T {
                 const localStorageEnabled = isLocalStorageEnabled();
@@ -82,6 +85,7 @@ export function getStorage({
             }
 
             function getSession<T>(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 handler: (state: Record<string, any>) => T
             ): T {
                 return getState((storage) => {
@@ -105,6 +109,7 @@ export function getStorage({
             }
 
             function getSessionState<T>(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 handler: (state: Record<string, any>) => T
             ): T {
                 return getSession((session) => {

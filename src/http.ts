@@ -5,6 +5,7 @@ type RequestOptionsType = {
     url: string;
     method?: string;
     headers?: Record<string, string>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     json?: ReadonlyArray<unknown> | Record<string, any>;
     data?: Record<string, string>;
     body?: string;
@@ -14,6 +15,7 @@ type RequestOptionsType = {
 type ResponseType = {
     status: number;
     headers: Record<string, string>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     body: Record<string, any>;
 };
 const HEADERS = {
@@ -43,8 +45,7 @@ export function request({
     win = window,
     timeout = 0
 }: RequestOptionsType): ZalgoPromise<ResponseType> {
-    // ts-upgrade TODO add zalgo promise types
-    return new ZalgoPromise((resolve: Function, reject: Function) => {
+    return new ZalgoPromise((resolve, reject) => {
         if ((json && data) || (json && body) || (data && json)) {
             throw new Error(
                 `Only options.json or options.data or options.body should be passed`
