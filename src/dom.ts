@@ -23,6 +23,7 @@ import { KEY_CODES, ATTRIBUTES, UID_HASH_LENGTH } from './constants';
 import type { CancelableType } from './types';
 
 type ElementRefType = string | HTMLElement;
+
 export function getBody() : HTMLBodyElement | HTMLElement {
     // eslint-disable-next-line compat/compat
     const body = document.body;
@@ -33,17 +34,21 @@ export function getBody() : HTMLBodyElement | HTMLElement {
 
     return body;
 }
+
 export function isDocumentReady() : boolean {
     // eslint-disable-next-line compat/compat
     return Boolean(document.body) && document.readyState === 'complete';
 }
+
 export function isDocumentInteractive() : boolean {
     // eslint-disable-next-line compat/compat
     return Boolean(document.body) && document.readyState === 'interactive';
 }
+
 export function urlEncode(str : string) : string {
     return encodeURIComponent(str);
 }
+
 export function waitForWindowReady() : ZalgoPromise<void> {
     return inlineMemoize(waitForWindowReady, () : ZalgoPromise<void> => {
         return new ZalgoPromise((resolve : Function) => {
@@ -55,7 +60,9 @@ export function waitForWindowReady() : ZalgoPromise<void> {
         });
     });
 }
+
 type WaitForDocumentReady = () => ZalgoPromise<void>;
+
 export const waitForDocumentReady : WaitForDocumentReady = memoize(() => {
     return new ZalgoPromise((resolve : Function) => {
         if (isDocumentReady() || isDocumentInteractive()) {
@@ -70,6 +77,7 @@ export const waitForDocumentReady : WaitForDocumentReady = memoize(() => {
         }, 10);
     });
 });
+
 export function waitForDocumentBody() : ZalgoPromise<HTMLElement | HTMLBodyElement> {
     return ZalgoPromise.try(() => {
         if (document.body) {
@@ -85,6 +93,7 @@ export function waitForDocumentBody() : ZalgoPromise<HTMLElement | HTMLBodyEleme
         });
     });
 }
+
 export function parseQuery(queryString : string) : Record<string, string> {
     return inlineMemoize(
         parseQuery,
@@ -114,9 +123,11 @@ export function parseQuery(queryString : string) : Record<string, string> {
         [ queryString ]
     );
 }
+
 export function getQueryParam(name : string) : string {
     return parseQuery(window.location.search.slice(1))[name];
 }
+
 export function urlWillRedirectPage(url : string) : boolean {
     if (url.indexOf('#') === -1) {
         return true;
@@ -132,7 +143,9 @@ export function urlWillRedirectPage(url : string) : boolean {
 
     return true;
 }
+
 export type Query = Record<string, boolean | string>;
+
 export function formatQuery(obj : Query = {}) : string {
     return Object.keys(obj)
         .filter((key) => {
@@ -149,6 +162,7 @@ export function formatQuery(obj : Query = {}) : string {
         })
         .join('&');
 }
+
 export function extendQuery(originalQuery : string, props : Query = {}) : string {
     if (!props || !Object.keys(props).length) {
         return originalQuery;
@@ -156,6 +170,7 @@ export function extendQuery(originalQuery : string, props : Query = {}) : string
 
     return formatQuery({ ...parseQuery(originalQuery), ...props });
 }
+
 export function extendUrl(
     url : string,
     options : {
@@ -183,9 +198,9 @@ export function extendUrl(
 
     return originalUrl;
 }
+
 export function redirect(url : string, win : CrossDomainWindowType = window) : ZalgoPromise<void> {
-    // @ts-upgrade TODO: - Need to get in zalgo promise defs
-    return new ZalgoPromise((resolve : Function) => {
+    return new ZalgoPromise((resolve) => {
         // @ts-ignore
         win.location = url;
 
@@ -194,6 +209,7 @@ export function redirect(url : string, win : CrossDomainWindowType = window) : Z
         }
     });
 }
+
 export function hasMetaViewPort() : boolean {
     const meta = document.querySelector('meta[name=viewport]');
 
@@ -203,9 +219,11 @@ export function hasMetaViewPort() : boolean {
 
     return true;
 }
+
 export function isElementVisible(el : HTMLElement) : boolean {
     return Boolean(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
 }
+
 export function getPerformance() : Performance | null | undefined {
     return inlineMemoize(getPerformance, () : Performance | null | undefined => {
         const performance = window.performance;
@@ -223,9 +241,11 @@ export function getPerformance() : Performance | null | undefined {
         }
     });
 }
+
 export function enablePerformance() : boolean {
     return Boolean(getPerformance());
 }
+
 export function getPageRenderTime() : ZalgoPromise<number | null | undefined> {
     return waitForDocumentReady().then(() => {
         const performance = getPerformance();
@@ -241,6 +261,7 @@ export function getPageRenderTime() : ZalgoPromise<number | null | undefined> {
         }
     });
 }
+
 export function htmlEncode(html = '') : string {
     return html
         .toString()
@@ -251,26 +272,26 @@ export function htmlEncode(html = '') : string {
         .replace(/'/g, '&#39;')
         .replace(/\//g, '&#x2F;');
 }
+
 export function isBrowser() : boolean {
     return typeof window !== 'undefined' && window.location !== undefined;
 }
+
 export function querySelectorAll(selector : string, doc : HTMLDocument = window.document) : ReadonlyArray<HTMLElement> {
     return Array.prototype.slice.call(doc.querySelectorAll(selector));
 }
+
 export function onClick(element : HTMLElement, handler : (arg0 : Event) => void) : void {
     element.addEventListener('touchstart', noop);
     element.addEventListener('click', handler);
     element.addEventListener('keypress', (event : Event) => {
-        if (
-            // @ts-ignore
-            event.keyCode === KEY_CODES.ENTER ||
-            // @ts-ignore
-            event.keyCode === KEY_CODES.SPACE
-        ) {
+        // @ts-ignore
+        if (event.keyCode === KEY_CODES.ENTER || event.keyCode === KEY_CODES.SPACE) {
             return handler(event);
         }
     });
 }
+
 export function getScript({
     host = window.location.host,
     path,
@@ -305,6 +326,7 @@ export function getScript({
         [ path ]
     );
 }
+
 export function isLocalStorageEnabled() : boolean {
     return inlineMemoize(isLocalStorageEnabled, () => {
         try {
@@ -329,6 +351,7 @@ export function isLocalStorageEnabled() : boolean {
         return false;
     });
 }
+
 export function getBrowserLocales() : Array<{
     country ?: string;
     lang : string;
@@ -367,9 +390,11 @@ export function getBrowserLocales() : Array<{
         })
         .filter(Boolean);
 }
+
 export function appendChild(container : HTMLElement, child : HTMLElement | Text) : void {
     container.appendChild(child);
 }
+
 export function isElement(element : unknown) : boolean {
     if (element instanceof window.Element) {
         return true;
@@ -390,6 +415,7 @@ export function isElement(element : unknown) : boolean {
 
     return false;
 }
+
 export function getElementSafe(
     id : ElementRefType,
     doc : Document | HTMLElement = document
@@ -403,6 +429,7 @@ export function getElementSafe(
         return doc.querySelector(id) as HTMLElement;
     }
 }
+
 export function getElement(id : ElementRefType, doc : Document | HTMLElement = document) : HTMLElement {
     const element = getElementSafe(id, doc);
 
@@ -412,6 +439,7 @@ export function getElement(id : ElementRefType, doc : Document | HTMLElement = d
 
     throw new Error(`Can not find element: ${ stringify(id) }`);
 }
+
 export function elementReady(id : ElementRefType) : ZalgoPromise<HTMLElement> {
     // @ts-upgrade TODO: add zalgo promise types
     return new ZalgoPromise((resolve : Function, reject : Function) => {
@@ -442,8 +470,10 @@ export function elementReady(id : ElementRefType) : ZalgoPromise<HTMLElement> {
         }, 10);
     });
 }
+
 // eslint-disable-next-line unicorn/custom-error-definition
 export class PopupOpenError extends ExtendableError {}
+
 type PopupOptions = {
     name ?: string;
     width ?: number;
@@ -456,6 +486,7 @@ type PopupOptions = {
     menubar ?: 0 | 1;
     scrollbars ?: 0 | 1;
 };
+
 export function popup(url : string, options ?: PopupOptions) : CrossDomainWindowType {
     options = options || {};
     const { width, height } = options;
@@ -522,6 +553,7 @@ export function popup(url : string, options ?: PopupOptions) : CrossDomainWindow
     window.addEventListener('unload', () => win?.close());
     return win;
 }
+
 export function writeToWindow(win : SameDomainWindowType, html : string) : void {
     try {
         win.document.open();
@@ -536,6 +568,7 @@ export function writeToWindow(win : SameDomainWindowType, html : string) : void 
         }
     }
 }
+
 export function writeElementToWindow(win : SameDomainWindowType, el : HTMLElement) : void {
     const tag = el.tagName.toLowerCase();
 
@@ -557,6 +590,7 @@ export function writeElementToWindow(win : SameDomainWindowType, el : HTMLElemen
         documentElement.appendChild(child);
     }
 }
+
 export function setStyle(el : HTMLElement, styleText : string, doc : Document = window.document) : void {
     // @ts-ignore
     if (el.styleSheet) {
@@ -566,6 +600,7 @@ export function setStyle(el : HTMLElement, styleText : string, doc : Document = 
         el.appendChild(doc.createTextNode(styleText));
     }
 }
+
 export type ElementOptionsType = {
     style ?: Record<string, string>;
     id ?: string;
@@ -576,6 +611,7 @@ export type ElementOptionsType = {
 };
 
 let awaitFrameLoadPromises : WeakMap<HTMLIFrameElement, ZalgoPromise<HTMLIFrameElement>>;
+
 export function awaitFrameLoad(frame : HTMLIFrameElement) : ZalgoPromise<HTMLIFrameElement> {
     awaitFrameLoadPromises = awaitFrameLoadPromises || new WeakMap();
 
@@ -671,7 +707,9 @@ export function createElement(
 
     return element;
 }
+
 type StringMap = Record<string, string>;
+
 export type IframeElementOptionsType = {
     style ?: StringMap;
     class ?: ReadonlyArray<string> | null | undefined;
@@ -733,6 +771,7 @@ export function iframe(
     // @ts-ignore
     return frame;
 }
+
 export function addEventListener(
     obj : HTMLElement,
     event : string,
@@ -746,6 +785,7 @@ export function addEventListener(
         }
     };
 }
+
 export function bindEvents(
     element : HTMLElement,
     eventNames : ReadonlyArray<string>,
@@ -765,7 +805,9 @@ export function bindEvents(
         })
     };
 }
+
 const VENDOR_PREFIXES = [ 'webkit', 'moz', 'ms', 'o' ];
+
 export function setVendorCSS(element : HTMLElement, name : string, value : string) : void {
     // @ts-ignore
     element.style[name] = value;
@@ -776,8 +818,10 @@ export function setVendorCSS(element : HTMLElement, name : string, value : strin
         element.style[`${ prefix }${ capitalizedName }`] = value;
     }
 }
+
 const ANIMATION_START_EVENTS = [ 'animationstart', 'webkitAnimationStart', 'oAnimationStart', 'MSAnimationStart' ];
 const ANIMATION_END_EVENTS = [ 'animationend', 'webkitAnimationEnd', 'oAnimationEnd', 'MSAnimationEnd' ];
+
 export function animate(
     element : ElementRefType,
     name : string,
@@ -858,23 +902,29 @@ export function animate(
         }
     });
 }
+
 export function makeElementVisible(element : HTMLElement) : void {
     element.style.setProperty('visibility', '');
 }
+
 export function makeElementInvisible(element : HTMLElement) : void {
     element.style.setProperty('visibility', 'hidden', 'important');
 }
+
 export function showElement(element : HTMLElement) : void {
     element.style.setProperty('display', '');
 }
+
 export function hideElement(element : HTMLElement) : void {
     element.style.setProperty('display', 'none', 'important');
 }
+
 export function destroyElement(element : HTMLElement) : void {
     if (element && element.parentNode) {
         element.parentNode.removeChild(element);
     }
 }
+
 export function showAndAnimate(
     element : HTMLElement,
     name : string,
@@ -884,6 +934,7 @@ export function showAndAnimate(
     showElement(element);
     return animation;
 }
+
 export function animateAndHide(
     element : HTMLElement,
     name : string,
@@ -893,12 +944,15 @@ export function animateAndHide(
         hideElement(element);
     });
 }
+
 export function addClass(element : HTMLElement, name : string) : void {
     element.classList.add(name);
 }
+
 export function removeClass(element : HTMLElement, name : string) : void {
     element.classList.remove(name);
 }
+
 export function isElementClosed(el : HTMLElement) : boolean {
     if (
         !el ||
@@ -912,6 +966,7 @@ export function isElementClosed(el : HTMLElement) : boolean {
 
     return false;
 }
+
 export function watchElementForClose(element : HTMLElement, handler : () => unknown) : CancelableType {
     handler = once(handler);
     let cancelled = false;
@@ -999,6 +1054,7 @@ export function watchElementForClose(element : HTMLElement, handler : () => unkn
         cancel
     };
 }
+
 export function fixScripts(el : HTMLElement, doc : Document = window.document) : void {
     // @ts-ignore - querySelectorAll takes a document not element
     for (const script of querySelectorAll('script', el)) {
@@ -1014,12 +1070,14 @@ export function fixScripts(el : HTMLElement, doc : Document = window.document) :
         parentNode.replaceChild(newScript, script);
     }
 }
+
 type OnResizeOptions = {
     width ?: boolean;
     height ?: boolean;
     interval ?: number;
     win ?: SameDomainWindowType;
 };
+
 export function onResize(
     el : HTMLElement,
     handler : (arg0 : { width : number; height : number }) => void,
@@ -1088,6 +1146,7 @@ export function onResize(
         }
     };
 }
+
 export function getResourceLoadTime(url : string) : number | null | undefined {
     const performance = getPerformance();
 
@@ -1109,6 +1168,7 @@ export function getResourceLoadTime(url : string) : number | null | undefined {
         }
     }
 }
+
 export function isShadowElement(element : Node) : boolean {
     while (element.parentNode) {
         element = element.parentNode;
@@ -1116,6 +1176,7 @@ export function isShadowElement(element : Node) : boolean {
 
     return element.toString() === '[object ShadowRoot]';
 }
+
 export function getShadowRoot(element : Node) : Node | null | undefined {
     while (element.parentNode) {
         element = element.parentNode;
@@ -1125,6 +1186,7 @@ export function getShadowRoot(element : Node) : Node | null | undefined {
         return element;
     }
 }
+
 export function getShadowHost(element : Node) : HTMLElement | null | undefined {
     const shadowRoot = getShadowRoot(element);
 
@@ -1134,6 +1196,7 @@ export function getShadowHost(element : Node) : HTMLElement | null | undefined {
         return shadowRoot.host;
     }
 }
+
 export function insertShadowSlot(element : HTMLElement) : HTMLElement {
     const shadowHost = getShadowHost(element);
 
@@ -1155,6 +1218,7 @@ export function insertShadowSlot(element : HTMLElement) : HTMLElement {
 
     return slotProvider;
 }
+
 export function preventClickFocus(el : HTMLElement) : void {
     const onFocus = (event : Event) => {
         el.removeEventListener('focus', onFocus);
@@ -1170,6 +1234,7 @@ export function preventClickFocus(el : HTMLElement) : void {
         }, 1);
     });
 }
+
 export function getStackTrace() : string {
     try {
         throw new Error('_');
@@ -1198,10 +1263,10 @@ function inferCurrentScript() : HTMLScriptElement | null | undefined {
     }
 }
 
-let currentScript =
-    // eslint-disable-next-line compat/compat
-    typeof document !== 'undefined' ? document.currentScript : null;
+// eslint-disable-next-line compat/compat
+let currentScript = typeof document !== 'undefined' ? document.currentScript : null;
 type GetCurrentScript = () => HTMLScriptElement;
+
 // @ts-ignore = need memo helper
 export const getCurrentScript : GetCurrentScript = memoize(() => {
     if (currentScript) {
@@ -1217,6 +1282,7 @@ export const getCurrentScript : GetCurrentScript = memoize(() => {
 
     throw new Error('Can not determine current script');
 });
+
 const currentUID = uniqueID();
 type GetCurrentScriptUID = () => string;
 export const getCurrentScriptUID : GetCurrentScriptUID = memoize(() => {
@@ -1256,12 +1322,14 @@ export const getCurrentScriptUID : GetCurrentScriptUID = memoize(() => {
     script.setAttribute(`${ ATTRIBUTES.UID }-auto`, uid);
     return uid;
 });
+
 type SubmitFormOptions = {
     url : string;
     target : string;
     body ?: Record<string, string | boolean>;
     method ?: string;
 };
+
 export function submitForm({ url, target, body, method = 'post' } : SubmitFormOptions) : void {
     const form = document.createElement('form');
     form.setAttribute('target', target);
@@ -1282,3 +1350,4 @@ export function submitForm({ url, target, body, method = 'post' } : SubmitFormOp
     form.submit();
     getBody().removeChild(form);
 }
+

@@ -4,6 +4,7 @@ export function getUserAgent() : string {
     // @ts-ignore - mockUserAgent does not exist natively
     return window.navigator.mockUserAgent || window.navigator.userAgent;
 }
+
 export function isDevice(userAgent : string = getUserAgent()) : boolean {
     if (
         userAgent.match(
@@ -15,6 +16,7 @@ export function isDevice(userAgent : string = getUserAgent()) : boolean {
 
     return false;
 }
+
 export function isWebView() : boolean {
     const userAgent = getUserAgent();
     return (
@@ -23,39 +25,50 @@ export function isWebView() : boolean {
         (/Android.*Version\/(\d)\.(\d)/i).test(userAgent)
     );
 }
+
 export function isStandAlone() : boolean {
     return (
         // @ts-ignore - standalone does not exist natively
         window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches
     );
 }
+
 export function isFacebookWebView(ua : string = getUserAgent()) : boolean {
     return (/FBAN/).test(ua) || (/FBAV/).test(ua);
 }
+
 export function isFirefox(ua : string = getUserAgent()) : boolean {
     return (/Firefox/i).test(ua);
 }
+
 export function isFirefoxIOS(ua : string = getUserAgent()) : boolean {
     return (/FxiOS/i).test(ua);
 }
+
 export function isEdgeIOS(ua : string = getUserAgent()) : boolean {
     return (/EdgiOS/i).test(ua);
 }
+
 export function isOperaMini(ua : string = getUserAgent()) : boolean {
     return (/Opera Mini/i).test(ua);
 }
+
 export function isAndroid(ua : string = getUserAgent()) : boolean {
     return (/Android/).test(ua);
 }
+
 export function isIos(ua : string = getUserAgent()) : boolean {
     return (/iPhone|iPod|iPad/).test(ua);
 }
+
 export function isGoogleSearchApp(ua : string = getUserAgent()) : boolean {
     return (/\bGSA\b/).test(ua);
 }
+
 export function isQQBrowser(ua : string = getUserAgent()) : boolean {
     return (/QQBrowser/).test(ua);
 }
+
 export function isIosWebview(ua : string = getUserAgent()) : boolean {
     if (isIos(ua)) {
         if (isGoogleSearchApp(ua)) {
@@ -67,6 +80,7 @@ export function isIosWebview(ua : string = getUserAgent()) : boolean {
 
     return false;
 }
+
 export function isSFVC(ua : string = getUserAgent()) : boolean {
     if (isIos(ua)) {
         // @ts-ignore no types for screenHeights.ts yet
@@ -89,6 +103,7 @@ export function isSFVC(ua : string = getUserAgent()) : boolean {
 
     return false;
 }
+
 export function isSFVCorSafari(ua : string = getUserAgent()) : boolean {
     if (isIos(ua)) {
         const sfvc = isSFVC(ua);
@@ -114,6 +129,7 @@ export function isSFVCorSafari(ua : string = getUserAgent()) : boolean {
 
     return false;
 }
+
 export function isAndroidWebview(ua : string = getUserAgent()) : boolean {
     if (isAndroid(ua)) {
         return (/Version\/[\d.]+/).test(ua) && !isOperaMini(ua);
@@ -121,6 +137,7 @@ export function isAndroidWebview(ua : string = getUserAgent()) : boolean {
 
     return false;
 }
+
 export function isIE() : boolean {
     // @ts-ignore
     if (window.document.documentMode) {
@@ -131,6 +148,7 @@ export function isIE() : boolean {
         window.navigator && window.navigator.userAgent && (/Edge|MSIE|rv:11/i).test(window.navigator.userAgent)
     );
 }
+
 export function isIECompHeader() : boolean {
     const mHttp = window.document.querySelector('meta[http-equiv="X-UA-Compatible"]');
     const mContent = window.document.querySelector('meta[content="IE=edge"]');
@@ -141,6 +159,7 @@ export function isIECompHeader() : boolean {
 
     return false;
 }
+
 export function isElectron() : boolean {
     if (typeof process !== 'undefined' && process.versions && process.versions.electron) {
         return true;
@@ -148,6 +167,7 @@ export function isElectron() : boolean {
 
     return false;
 }
+
 export function isIEIntranet() : boolean {
     // This status check only works for older versions of IE with document.documentMode set
     // @ts-ignore - documentMode was removed from tsc
@@ -169,10 +189,12 @@ export function isIEIntranet() : boolean {
 
     return false;
 }
+
 export function isMacOsCna() : boolean {
     const userAgent = getUserAgent();
     return (/Macintosh.*AppleWebKit(?!.*Safari)/i).test(userAgent);
 }
+
 export function supportsPopups(ua : string = getUserAgent()) : boolean {
     return !(
         isIosWebview(ua) ||
@@ -187,12 +209,15 @@ export function supportsPopups(ua : string = getUserAgent()) : boolean {
         isStandAlone()
     );
 }
+
 export function isChrome(ua : string = getUserAgent()) : boolean {
     return (/Chrome|Chromium|CriOS/).test(ua);
 }
+
 export function isSafari(ua : string = getUserAgent()) : boolean {
     return (/Safari/).test(ua) && !isChrome(ua);
 }
+
 export function isApplePaySupported() : boolean {
     try {
         if (
@@ -211,3 +236,4 @@ export function isApplePaySupported() : boolean {
 
     return false;
 }
+
