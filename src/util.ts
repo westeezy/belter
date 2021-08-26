@@ -8,6 +8,7 @@ export function getFunctionName(fn : Function) : string {
     // @ts-ignore - cant infer this all from T
     return fn.name || fn.__name__ || fn.displayName || 'anonymous';
 }
+
 export function setFunctionName<T extends Function>(fn : T, name : string) : T {
     try {
         // @ts-ignore this should be readonly
@@ -22,6 +23,7 @@ export function setFunctionName<T extends Function>(fn : T, name : string) : T {
     fn.__name__ = fn.displayName = name;
     return fn;
 }
+
 export function base64encode(str : string) : string {
     if (typeof btoa === 'function') {
         return btoa(
@@ -37,6 +39,7 @@ export function base64encode(str : string) : string {
 
     throw new Error(`Can not find window.btoa or Buffer`);
 }
+
 export function base64decode(str : string) : string {
     if (typeof atob === 'function') {
         return decodeURIComponent(
@@ -54,6 +57,7 @@ export function base64decode(str : string) : string {
 
     throw new Error(`Can not find window.atob or Buffer`);
 }
+
 export function uniqueID() : string {
     const chars = '0123456789abcdef';
     const randomID = 'xxxxxxxxxx'.replace(/./g, () => {
@@ -122,6 +126,7 @@ function serializeArgs<T>(args : ReadonlyArray<T>) : string {
 export function getEmptyObject() : Record<string, undefined> {
     return {};
 }
+
 type MemoizeOptions = {
     name ?: string;
     time ?: number;
@@ -135,6 +140,7 @@ const getDefaultMemoizeOptions = () : MemoizeOptions => {
 export type Memoized<F> = F & {
     reset : () => void;
 };
+
 let memoizeGlobalIndex = 0;
 let memoizeGlobalIndexValidFrom = 0;
 
@@ -236,6 +242,7 @@ export function memoizePromise<R>(method : (...args : ReadonlyArray<any>) => Zal
 
     return setFunctionName(memoizedPromiseFunction, `${ getFunctionName(method) }::promiseMemoized`);
 }
+
 type PromisifyOptions = {
     name ?: string;
 };
@@ -301,6 +308,7 @@ export function hashStr(str : string) : number {
 
     return Math.floor(Math.pow(Math.sqrt(hash), 5));
 }
+
 export function strHashStr(str : string) : string {
     let hash = '';
 
@@ -316,6 +324,7 @@ export function strHashStr(str : string) : string {
 
     return hash;
 }
+
 export function match(str : string, pattern : RegExp) : string | null | undefined {
     const regmatch = str.match(pattern);
 
@@ -323,6 +332,7 @@ export function match(str : string, pattern : RegExp) : string | null | undefine
         return regmatch[1];
     }
 }
+
 export function awaitKey<T extends unknown>(obj : Record<string, T>, key : string) : ZalgoPromise<T> {
     return new ZalgoPromise((resolve : Function) => {
         let value = obj[key];
@@ -349,6 +359,7 @@ export function awaitKey<T extends unknown>(obj : Record<string, T>, key : strin
         });
     });
 }
+
 export function stringifyError(err : unknown, level = 1) : string {
     if (level >= 3) {
         return 'stringifyError stack overflow';
@@ -391,6 +402,7 @@ export function stringifyError(err : unknown, level = 1) : string {
         return `Error while stringifying error: ${ stringifyError(newErr, level + 1) }`;
     }
 }
+
 export function stringifyErrorMessage(err : Error) : string {
     const defaultMessage = `<unknown error: ${ Object.prototype.toString.call(err) }>`;
 
@@ -480,20 +492,26 @@ export function values<T>(obj : Record<string, T>) : ReadonlyArray<T> {
 
     return result;
 }
+
 export const memoizedValues : <T>(arg0 : Record<string, T>) => ReadonlyArray<T> = memoize(values);
+
 export function perc(pixels : number, percentage : number) : number {
     return Math.round((pixels * percentage) / 100);
 }
+
 export function min(...args : ReadonlyArray<number>) : number {
     return Math.min(...args);
 }
+
 export function max(...args : ReadonlyArray<number>) : number {
     return Math.max(...args);
 }
+
 export function roundUp(num : number, nearest : number) : number {
     const remainder = num % nearest;
     return remainder ? num - remainder + nearest : num;
 }
+
 export function regexMap<T>(str : string, regexp : RegExp, handler : () => T) : ReadonlyArray<T> {
     const results : T[] = [];
     // @ts-ignore
@@ -503,9 +521,11 @@ export function regexMap<T>(str : string, regexp : RegExp, handler : () => T) : 
     });
     return results;
 }
+
 export function svgToBase64(svg : string) : string {
     return `data:image/svg+xml;base64,${ base64encode(svg) }`;
 }
+
 export function objFilter<T, R>(
     obj : Record<string, T>,
     filter : (arg0 : T, arg1 : string | null | undefined) => unknown = Boolean
@@ -523,9 +543,11 @@ export function objFilter<T, R>(
 
     return result;
 }
+
 export function identity<T>(item : T) : T {
     return item;
 }
+
 export function regexTokenize(text : string, regexp : RegExp) : ReadonlyArray<string> {
     const result : string[] = [];
     text.replace(regexp, (token) => {
@@ -534,6 +556,7 @@ export function regexTokenize(text : string, regexp : RegExp) : ReadonlyArray<st
     });
     return result;
 }
+
 export function promiseDebounce<T>(method : () => ZalgoPromise<T> | T, delay = 50) : () => ZalgoPromise<T> {
     let promise : ZalgoPromise<T> | null;
     let timeout : NodeJS.Timeout | null;
@@ -582,15 +605,19 @@ export function safeInterval(method : (...args : Array<any>) => any, time : numb
         }
     };
 }
+
 export function isInteger(str : string) : boolean {
     return Boolean(str.match(/^[0-9]+$/));
 }
+
 export function isFloat(str : string) : boolean {
     return Boolean(str.match(/^[0-9]+\.[0-9]+$/));
 }
+
 export function serializePrimitive(value : string | number | boolean) : string {
     return value.toString();
 }
+
 export function deserializePrimitive(value : string) : string | number | boolean {
     if (value === 'true') {
         return true;
@@ -604,6 +631,7 @@ export function deserializePrimitive(value : string) : string | number | boolean
         return value;
     }
 }
+
 export function dotify(
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     obj : Record<string, any>,
@@ -633,6 +661,7 @@ export function dotify(
 
     return newobj;
 }
+
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function undotify(obj : Record<string, string>) : Record<string, any> {
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
@@ -675,6 +704,7 @@ export function undotify(obj : Record<string, string>) : Record<string, any> {
 
     return result;
 }
+
 export type EventEmitterType = {
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     on : (eventName : string, handler : (...args : Array<any>) => any) => CancelableType;
@@ -684,6 +714,7 @@ export type EventEmitterType = {
     triggerOnce : (eventName : string, ...args : ReadonlyArray<unknown>) => ZalgoPromise<void>;
     reset : () => void;
 };
+
 export function eventEmitter() : EventEmitterType {
     const triggered = {};
     let handlers = {};
@@ -744,16 +775,19 @@ export function eventEmitter() : EventEmitterType {
     };
     return emitter;
 }
+
 export function camelToDasherize(string : string) : string {
     return string.replace(/([A-Z])/g, (g) => {
         return `-${ g.toLowerCase() }`;
     });
 }
+
 export function dasherizeToCamel(string : string) : string {
     return string.replace(/-([a-z])/g, (g) => {
         return g[1].toUpperCase();
     });
 }
+
 export function capitalizeFirstLetter(string : string) : string {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
@@ -826,15 +860,19 @@ export function defineLazyProp<T>(
         }
     });
 }
+
 export function arrayFrom<T>(item : Iterable<T>) : ReadonlyArray<T> {
     return Array.prototype.slice.call(item);
 }
+
 export function isObject(item : unknown) : boolean {
     return typeof item === 'object' && item !== null;
 }
+
 export function isObjectObject(obj : unknown) : boolean {
     return isObject(obj) && Object.prototype.toString.call(obj) === '[object Object]';
 }
+
 export function isPlainObject(obj : unknown) : boolean {
     if (!isObjectObject(obj)) {
         return false;
@@ -966,6 +1004,7 @@ export function regex(pattern : string | RegExp, string : string, start = 0) : R
         }
     };
 }
+
 export function regexAll(pattern : string | RegExp, string : string) : ReadonlyArray<RegexResultType> {
     const matches = [];
     let start = 0;
@@ -985,14 +1024,17 @@ export function regexAll(pattern : string | RegExp, string : string) : ReadonlyA
 
     return matches;
 }
+
 export function isDefined(value : unknown | null | undefined) : boolean {
     return value !== null && value !== undefined;
 }
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function cycle(method : (...args : Array<any>) => any) : ZalgoPromise<void> {
     // @ts-ignore - not even sure what to do with this
     return ZalgoPromise.try(method).then(() => cycle(method));
 }
+
 export function debounce<T>(
     method : (...args : ReadonlyArray<unknown>) => T,
     time = 100
@@ -1009,9 +1051,11 @@ export function debounce<T>(
 
     return setFunctionName(debounceWrapper, `${ getFunctionName(method) }::debounced`);
 }
+
 export function isRegex(item : unknown) : boolean {
     return Object.prototype.toString.call(item) === '[object RegExp]';
 }
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FunctionProxy<T extends (...args : Array<any>) => any> = (method : T) => T;
 
@@ -1024,6 +1068,7 @@ export const weakMapMemoize : FunctionProxy<any> = <R extends unknown>(method : 
         return weakmap.getOrSet(arg, () => method.call(this, arg));
     };
 };
+
 type FunctionPromiseProxy<R extends unknown, T extends (...args : ReadonlyArray<unknown>) => ZalgoPromise<R>> = (
     arg0 : T
 ) => T;
@@ -1052,6 +1097,7 @@ export function getOrSet<T extends unknown>(obj : Record<string, any>, key : str
     obj[key] = val;
     return val;
 }
+
 export type CleanupType = {
     set : <T extends unknown>(arg0 : string, arg1 : T) => T;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1102,6 +1148,7 @@ export function cleanup(obj : Record<string, any>) : CleanupType {
     };
     return cleaner;
 }
+
 export function tryCatch<T>(fn : () => T) :
     | {
           result : T;
@@ -1125,6 +1172,7 @@ export function tryCatch<T>(fn : () => T) :
         error
     };
 }
+
 export function removeFromArray<X, T extends Array<X>>(arr : T, item : X) : void {
     const index = arr.indexOf(item);
 
@@ -1132,6 +1180,7 @@ export function removeFromArray<X, T extends Array<X>>(arr : T, item : X) : void
         arr.splice(index, 1);
     }
 }
+
 export function assertExists<T>(name : string, thing : void | null | T) : T {
     if (thing === null || typeof thing === 'undefined') {
         throw new Error(`Expected ${ name } to be present`);
@@ -1139,6 +1188,7 @@ export function assertExists<T>(name : string, thing : void | null | T) : T {
 
     return thing;
 }
+
 export function unique(arr : ReadonlyArray<string>) : ReadonlyArray<string> {
     const result : Record<string, boolean> = {};
 
@@ -1148,12 +1198,14 @@ export function unique(arr : ReadonlyArray<string>) : ReadonlyArray<string> {
 
     return Object.keys(result);
 }
+
 export const constHas = <X extends string | boolean | number, T extends Record<string, X>>(
     constant : T,
     value : X
 ) : boolean => {
     return memoizedValues(constant).indexOf(value) !== -1;
 };
+
 export function dedupeErrors<T>(handler : (arg0 : unknown) => T) : (arg0 : unknown) => T | void {
     const seenErrors : unknown[] = [];
     const seenStringifiedErrors : Record<string, unknown> = {};
@@ -1173,6 +1225,7 @@ export function dedupeErrors<T>(handler : (arg0 : unknown) => T) : (arg0 : unkno
         return handler(err);
     };
 }
+
 export class ExtendableError extends Error {
     constructor(message : string) {
         super(message);

@@ -152,6 +152,7 @@ export function request({
         xhr.send(body);
     });
 }
+
 export function addHeaderBuilder(method : () => Record<string, string>) : void {
     headerBuilders.push(method);
 }

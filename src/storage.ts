@@ -12,6 +12,7 @@ export type Storage = {
     getSessionState : Getter<any>;
     getSessionID : () => string;
 };
+
 const DEFAULT_SESSION_STORAGE = 20 * 60 * 1000;
 export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE } : { name : string; lifetime ?: number }) : Storage {
     return inlineMemoize(
