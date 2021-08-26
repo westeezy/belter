@@ -5,11 +5,11 @@
 */
 let oldReadyState = document.readyState;
 Object.defineProperty(document, 'readyState', {
-    get(): string {
+    get() : string {
         return oldReadyState;
     },
 
-    set(newState: string) {
+    set(newState : string) {
         // @ts-ignore
         oldReadyState = newState;
     }
@@ -17,12 +17,12 @@ Object.defineProperty(document, 'readyState', {
 // eslint-disable-next-line compat/compat
 let oldBody = document.body;
 Object.defineProperty(document, 'body', {
-    get(): HTMLBodyElement | null {
+    get() : HTMLBodyElement | null {
         // @ts-ignore
         return oldBody;
     },
 
-    set(newBody: HTMLBodyElement | null) {
+    set(newBody : HTMLBodyElement | null) {
         // @ts-ignore
         oldBody = newBody;
     }

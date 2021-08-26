@@ -26,7 +26,7 @@ describe('get current script UID', () => {
         }
     });
     it('should use script\'s src and attributes to create the script UID', () => {
-        const currentScript: HTMLScriptElement = getCurrentScript();
+        const currentScript : HTMLScriptElement = getCurrentScript();
         currentScript.setAttribute('data-csp-nonce', '654321');
         const { src, dataset } = currentScript;
         const stringToHash = JSON.stringify({
@@ -34,7 +34,7 @@ describe('get current script UID', () => {
             dataset
         });
         const hashedString = strHashStr(stringToHash);
-        const uidString: string = getCurrentScriptUID();
+        const uidString : string = getCurrentScriptUID();
         const uidStringWithoutPrefix = uidString.split('uid_')[1];
 
         if (!hashedString.includes(uidStringWithoutPrefix)) {
@@ -46,7 +46,7 @@ describe('get current script UID', () => {
         currentScript.removeAttribute(`${ ATTRIBUTES.UID }-auto`);
         currentScript.setAttribute('data-custom-attribute', '123456');
         memoize.clear();
-        const uidString2: string = getCurrentScriptUID();
+        const uidString2 : string = getCurrentScriptUID();
 
         if (uidString === uidString2) {
             throw new Error(
@@ -55,10 +55,10 @@ describe('get current script UID', () => {
         }
     });
     it('should return data-uid if this was set', () => {
-        const script: HTMLScriptElement = getCurrentScript();
+        const script : HTMLScriptElement = getCurrentScript();
         script.removeAttribute(`${ ATTRIBUTES.UID }-auto`);
         script.setAttribute(`${ ATTRIBUTES.UID }`, '123456');
-        const uidString: string = getCurrentScriptUID();
+        const uidString : string = getCurrentScriptUID();
 
         if (uidString !== '123456') {
             throw new Error(

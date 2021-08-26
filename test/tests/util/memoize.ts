@@ -18,7 +18,7 @@ describe('memoize cases', () => {
     });
     it('should create a memoized function with a parameter', () => {
         let counter = 0;
-        const add = memoize((number: number) => {
+        const add = memoize((number : number) => {
             counter += number;
         });
         add(1);
@@ -53,7 +53,7 @@ describe('memoize cases', () => {
     });
     it('should create a memoized function with a parameter, and reset', () => {
         let counter = 0;
-        const add = memoize((number: number) => {
+        const add = memoize((number : number) => {
             counter += number;
         });
         add(1);
@@ -91,7 +91,7 @@ describe('memoize cases', () => {
     });
     it('should create a memoized function with a parameter, and clear', () => {
         let counter = 0;
-        const add = memoize((number: number) => {
+        const add = memoize((number : number) => {
             counter += number;
         });
         add(1);
@@ -140,7 +140,7 @@ describe('memoize cases', () => {
     it('should create a self-memoized function', () => {
         let counter = 0;
 
-        const add = (): void => {
+        const add = () : void => {
             return inlineMemoize(add, () => {
                 counter += 1;
             });
@@ -159,7 +159,7 @@ describe('memoize cases', () => {
     it('should create a self-memoized function with a parameter', () => {
         let counter = 0;
 
-        const add = (number: number): void => {
+        const add = (number : number) : void => {
             return inlineMemoize(
                 add,
                 () => {
@@ -183,7 +183,7 @@ describe('memoize cases', () => {
     it('should create a self-memoized function and call recursively', () => {
         let counter = 0;
 
-        const add = (): void => {
+        const add = () : void => {
             return inlineMemoize(add, () => {
                 counter += 1;
 
@@ -231,7 +231,7 @@ describe('memoize cases', () => {
     it('should create a memoized function with cache based on this and a parameter', () => {
         let counter = 0;
         const add = memoize(
-            (number: number) => {
+            (number : number) => {
                 counter += number;
             },
             {
@@ -295,7 +295,7 @@ describe('memoize cases', () => {
     it('should create a memoized function with cache based on this and a parameter, and reset the cache', () => {
         let counter = 0;
         const add = memoize(
-            (number: number) => {
+            (number : number) => {
                 counter += number;
             },
             {
@@ -364,7 +364,7 @@ describe('memoize cases', () => {
     it('should create a memoized function with cache based on this and a parameter, and clear the cache', () => {
         let counter = 0;
         const add = memoize(
-            (number: number) => {
+            (number : number) => {
                 counter += number;
             },
             {

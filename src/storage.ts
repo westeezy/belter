@@ -1,30 +1,30 @@
 import { uniqueID, getGlobal, inlineMemoize } from './util';
 import { isLocalStorageEnabled } from './dom';
 
-type Getter<T> = (handler: (arg0: Record<string, T>) => T) => T;
+type Getter<T> = (handler : (arg0 : Record<string, T>) => T) => T;
 
 export type Storage = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getState: Getter<any>;
-    getID: () => string;
-    isStateFresh: () => boolean;
+    getState : Getter<any>;
+    getID : () => string;
+    isStateFresh : () => boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getSessionState: Getter<any>;
-    getSessionID: () => string;
+    getSessionState : Getter<any>;
+    getSessionID : () => string;
 };
 const DEFAULT_SESSION_STORAGE = 20 * 60 * 1000;
-export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE }: { name: string; lifetime?: number }): Storage {
+export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE } : { name : string; lifetime ?: number }) : Storage {
     return inlineMemoize(
         getStorage,
         () => {
             const STORAGE_KEY = `__${ name }_storage__`;
             const newStateID = uniqueID();
-            let accessedStorage: WindowLocalStorage | null; // eslint-disable-line no-undef
+            let accessedStorage : WindowLocalStorage | null; // eslint-disable-line no-undef
 
             function getState<T>(
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                handler: (storage: Record<string, any>) => T
-            ): T {
+                handler : (storage : Record<string, any>) => T
+            ) : T {
                 const localStorageEnabled = isLocalStorageEnabled();
                 let storage;
 
@@ -67,18 +67,18 @@ export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE }: { name:
                 return result;
             }
 
-            function getID(): string {
+            function getID() : string {
                 return getState((storage) => storage.id);
             }
 
-            function isStateFresh(): boolean {
+            function isStateFresh() : boolean {
                 return getID() === newStateID;
             }
 
             function getSession<T>(
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                handler: (state: Record<string, any>) => T
-            ): T {
+                handler : (state : Record<string, any>) => T
+            ) : T {
                 return getState((storage) => {
                     let session = storage.__session__;
                     const now = Date.now();
@@ -101,15 +101,15 @@ export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE }: { name:
 
             function getSessionState<T>(
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                handler: (state: Record<string, any>) => T
-            ): T {
+                handler : (state : Record<string, any>) => T
+            ) : T {
                 return getSession((session) => {
                     session.state = session.state || {};
                     return handler(session.state);
                 });
             }
 
-            function getSessionID(): string {
+            function getSessionID() : string {
                 return getSession((session) => session.guid);
             }
 

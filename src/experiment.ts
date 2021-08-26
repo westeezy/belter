@@ -1,13 +1,13 @@
 import { noop } from './util';
 import { getStorage, Storage } from './storage';
 
-function getBelterExperimentStorage(): Storage {
+function getBelterExperimentStorage() : Storage {
     return getStorage({
         name: 'belter_experiment'
     });
 }
 
-function isEventUnique(name: string): boolean {
+function isEventUnique(name : string) : boolean {
     return getBelterExperimentStorage().getSessionState((state) => {
         state.loggedBeacons = state.loggedBeacons || [];
 
@@ -22,19 +22,19 @@ function isEventUnique(name: string): boolean {
 
 type Payload = Record<string, (string | boolean) | null | undefined>;
 export type Experiment = {
-    isEnabled: () => boolean;
-    isDisabled: () => boolean;
-    getTreatment: () => string;
-    log: (arg0: string, payload?: Payload) => Experiment;
-    logStart: (payload?: Payload) => Experiment;
-    logComplete: (payload?: Payload) => Experiment;
+    isEnabled : () => boolean;
+    isDisabled : () => boolean;
+    getTreatment : () => string;
+    log : (arg0 : string, payload ?: Payload) => Experiment;
+    logStart : (payload ?: Payload) => Experiment;
+    logComplete : (payload ?: Payload) => Experiment;
 };
 
-function getRandomInteger(range: number): number {
+function getRandomInteger(range : number) : number {
     return Math.floor(Math.random() * range);
 }
 
-function getThrottlePercentile(name: string): number {
+function getThrottlePercentile(name : string) : number {
     return getBelterExperimentStorage().getState((state) => {
         state.throttlePercentiles = state.throttlePercentiles || {};
         state.throttlePercentiles[name] = state.throttlePercentiles[name] || getRandomInteger(100);
@@ -48,17 +48,17 @@ const THROTTLE_GROUP = {
     THROTTLE:'throttle'
 };
 type ExperimentOptions = {
-    name: string;
-    sample?: number;
-    logTreatment?: (arg0: { name: string; treatment: string; payload: Payload; throttle: number }) => void;
-    logCheckpoint?: (arg0: {
-        name: string;
-        treatment: string;
-        checkpoint: string;
-        payload: Payload;
-        throttle: number;
+    name : string;
+    sample ?: number;
+    logTreatment ?: (arg0 : { name : string; treatment : string; payload : Payload; throttle : number }) => void;
+    logCheckpoint ?: (arg0 : {
+        name : string;
+        treatment : string;
+        checkpoint : string;
+        payload : Payload;
+        throttle : number;
     }) => void;
-    sticky?: boolean;
+    sticky ?: boolean;
 };
 export function experiment({
     name,
@@ -66,9 +66,9 @@ export function experiment({
     logTreatment = noop,
     logCheckpoint = noop,
     sticky = true
-}: ExperimentOptions): Experiment {
+} : ExperimentOptions) : Experiment {
     const throttle = sticky ? getThrottlePercentile(name) : getRandomInteger(100);
-    let group: string;
+    let group : string;
 
     // @ts-ignore __TEST__ global for test env
     if (throttle < sample && !__TEST__) {
@@ -92,19 +92,19 @@ export function experiment({
     }
 
     const exp = {
-        isEnabled(): boolean {
+        isEnabled() : boolean {
             return group === THROTTLE_GROUP.TEST || forced;
         },
 
-        isDisabled(): boolean {
+        isDisabled() : boolean {
             return group !== THROTTLE_GROUP.TEST && !forced;
         },
 
-        getTreatment(): string {
+        getTreatment() : string {
             return treatment;
         },
 
-        log(checkpoint: string, payload: Payload = {}): Experiment {
+        log(checkpoint : string, payload : Payload = {}) : Experiment {
             if (!started) {
                 return exp;
             }
@@ -131,12 +131,12 @@ export function experiment({
             return exp;
         },
 
-        logStart(payload: Payload = {}): Experiment {
+        logStart(payload : Payload = {}) : Experiment {
             started = true;
             return exp.log(`start`, payload);
         },
 
-        logComplete(payload: Payload = {}): Experiment {
+        logComplete(payload : Payload = {}) : Experiment {
             return exp.log(`complete`, payload);
         }
     };

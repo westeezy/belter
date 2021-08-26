@@ -1,7 +1,7 @@
 import { base64encode, base64decode } from '../../../src';
 
 describe('serialization cases', () => {
-    function encodedecode(input: string) {
+    function encodedecode(input : string) {
         const encoded = base64encode(input);
         const decoded = base64decode(encoded);
 

@@ -11,7 +11,7 @@ describe('isIEIntranet', () => {
     it('should return false when window.document.documentMode is a truthy value and window.status does not equal testIntranetMode', () => {
         Object.defineProperty(window, 'status', {
             // returning something in a setter causes window.status to equal undefined when someone sets a value to it
-            set(_): string {
+            set(_) : string {
                 return `potato${ _ }`; // eslint-disable-line no-setter-return
             }
         });

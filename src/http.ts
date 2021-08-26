@@ -2,30 +2,30 @@ import { ZalgoPromise } from 'zalgo-promise';
 import type { SameDomainWindowType } from 'cross-domain-utils';
 
 type RequestOptionsType = {
-    url: string;
-    method?: string;
-    headers?: Record<string, string>;
+    url : string;
+    method ?: string;
+    headers ?: Record<string, string>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    json?: ReadonlyArray<unknown> | Record<string, any>;
-    data?: Record<string, string>;
-    body?: string;
-    win?: SameDomainWindowType;
-    timeout?: number;
+    json ?: ReadonlyArray<unknown> | Record<string, any>;
+    data ?: Record<string, string>;
+    body ?: string;
+    win ?: SameDomainWindowType;
+    timeout ?: number;
 };
 type ResponseType = {
-    status: number;
-    headers: Record<string, string>;
+    status : number;
+    headers : Record<string, string>;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    body: Record<string, any>;
+    body : Record<string, any>;
 };
 const HEADERS = {
     CONTENT_TYPE:'content-type',
     ACCEPT:      'accept'
 };
-const headerBuilders: Function[] = [];
+const headerBuilders : Function[] = [];
 
-function parseHeaders(rawHeaders = ''): Record<string, string> {
-    const result: Record<string, string> = {};
+function parseHeaders(rawHeaders = '') : Record<string, string> {
+    const result : Record<string, string> = {};
 
     for (const line of rawHeaders.trim().split('\n')) {
         const [ key, ...values ] = line.split(':');
@@ -44,13 +44,13 @@ export function request({
     body,
     win = window,
     timeout = 0
-}: RequestOptionsType): ZalgoPromise<ResponseType> {
+} : RequestOptionsType) : ZalgoPromise<ResponseType> {
     return new ZalgoPromise((resolve, reject) => {
         if ((json && data) || (json && body) || (data && json)) {
             throw new Error(`Only options.json or options.data or options.body should be passed`);
         }
 
-        const normalizedHeaders: Record<string, string> = {};
+        const normalizedHeaders : Record<string, string> = {};
 
         for (const key of Object.keys(headers)) {
             normalizedHeaders[key.toLowerCase()] = headers[key];
@@ -77,7 +77,7 @@ export function request({
         const xhr = new win.XMLHttpRequest();
         xhr.addEventListener(
             'load',
-            function xhrLoad(): void {
+            function xhrLoad() : void {
                 const responseHeaders = parseHeaders(
                     // @ts-ignore no annotation for this
                     this.getAllResponseHeaders()
@@ -120,7 +120,7 @@ export function request({
         );
         xhr.addEventListener(
             'error',
-            (evt: Event) => {
+            (evt : Event) => {
                 reject(new Error(`Request to ${ method.toLowerCase() } ${ url } failed: ${ evt.toString() }.`));
             },
             false
@@ -152,6 +152,6 @@ export function request({
         xhr.send(body);
     });
 }
-export function addHeaderBuilder(method: () => Record<string, string>): void {
+export function addHeaderBuilder(method : () => Record<string, string>) : void {
     headerBuilders.push(method);
 }
