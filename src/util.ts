@@ -4,14 +4,11 @@ import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 import type { CancelableType } from './types';
 
-export function getFunctionName<T extends (...args: Array<any>) => any>(
-    fn: T): string {
+export function getFunctionName(fn: Function): string {
     // @ts-ignore - cant infer this all from T
     return fn.name || fn.__name__ || fn.displayName || 'anonymous';
 }
-export function setFunctionName<T extends (...args: Array<any>) => any>(
-    fn: T,
-    name: string): T {
+export function setFunctionName<T extends Function>(fn: T, name: string): T {
     try {
         // @ts-ignore this should be readonly
         delete fn.name;
@@ -45,9 +42,7 @@ export function base64decode(str: string): string {
         return decodeURIComponent(
             Array.prototype.map
                 .call(atob(str), (c) => {
-                    return (
-                        `%${  (`00${  c.charCodeAt(0).toString(16) }`).slice(-2) }`
-                    );
+                    return `%${ `00${ c.charCodeAt(0).toString(16) }`.slice(-2) }`;
                 })
                 .join('')
         );
@@ -64,13 +59,13 @@ export function uniqueID(): string {
     const randomID = 'xxxxxxxxxx'.replace(/./g, () => {
         return chars.charAt(Math.floor(Math.random() * chars.length));
     });
-    const timeID = base64encode(
-        new Date().toISOString().slice(11, 19).replace('T', '.')
-    )
+    const timeID = base64encode(new Date().toISOString().slice(11, 19).replace('T', '.'))
         .replace(/[^a-zA-Z0-9]/g, '')
         .toLowerCase();
     return `uid_${ randomID }_${ timeID }`;
 }
+
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function getGlobal(): Record<string, any> {
     if (typeof window !== 'undefined') {
         return window;
@@ -89,15 +84,14 @@ export function getGlobal(): Record<string, any> {
     throw new Error(`No global found`);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let objectIDs: any;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getObjectID(obj: Record<string, any>): string {
     objectIDs = objectIDs || new WeakMap();
 
-    if (
-        obj === null ||
-        obj === undefined ||
-        (typeof obj !== 'object' && typeof obj !== 'function')
-    ) {
+    if (obj === null || obj === undefined || (typeof obj !== 'object' && typeof obj !== 'function')) {
         throw new Error(`Invalid object`);
     }
 
@@ -113,20 +107,15 @@ export function getObjectID(obj: Record<string, any>): string {
 
 function serializeArgs<T>(args: ReadonlyArray<T>): string {
     try {
-        return JSON.stringify(
-            Array.prototype.slice.call(args),
-            (subkey, val) => {
-                if (typeof val === 'function') {
-                    return `memoize[${ getObjectID(val) }]`;
-                }
-
-                return val;
+        return JSON.stringify(Array.prototype.slice.call(args), (subkey, val) => {
+            if (typeof val === 'function') {
+                return `memoize[${ getObjectID(val) }]`;
             }
-        );
+
+            return val;
+        });
     } catch (err) {
-        throw new Error(
-            `Arguments not serializable -- can not be used to memoize`
-        );
+        throw new Error(`Arguments not serializable -- can not be used to memoize`);
     }
 }
 
@@ -148,15 +137,19 @@ export type Memoized<F> = F & {
 };
 let memoizeGlobalIndex = 0;
 let memoizeGlobalIndexValidFrom = 0;
-export function memoize<F extends (...args: Array<any>) => any>(
-    method: F,
-    options: MemoizeOptions = getDefaultMemoizeOptions()): Memoized<F> {
+
+export function memoize<F extends Function>(method: F, options: MemoizeOptions = getDefaultMemoizeOptions()): Memoized<F> {
     const { thisNamespace = false, time: cacheTime } = options;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let simpleCache: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let thisCache: any;
+
     let memoizeIndex = memoizeGlobalIndex;
     memoizeGlobalIndex += 1;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const memoizedFunction = function memoizedFunction(...args: any): unknown {
         if (memoizeIndex < memoizeGlobalIndexValidFrom) {
             simpleCache = null;
@@ -178,11 +171,7 @@ export function memoize<F extends (...args: Array<any>) => any>(
         const cacheKey = serializeArgs(args);
         let cacheResult = cache[cacheKey];
 
-        if (
-            cacheResult &&
-            cacheTime &&
-            Date.now() - cacheResult.time < cacheTime
-        ) {
+        if (cacheResult && cacheTime && Date.now() - cacheResult.time < cacheTime) {
             delete cache[cacheKey];
             cacheResult = null;
         }
@@ -209,29 +198,24 @@ export function memoize<F extends (...args: Array<any>) => any>(
     // @ts-ignore
     const result: F = memoizedFunction;
     // @ts-ignore
-    return setFunctionName(
-        result,
-        `${ options.name || getFunctionName(method) }::memoized`
-    );
+    return setFunctionName(result, `${ options.name || getFunctionName(method) }::memoized`);
 }
 
 memoize.clear = () => {
     memoizeGlobalIndexValidFrom = memoizeGlobalIndex;
 };
 
-export function promiseIdentity<T extends unknown>(
-    item: ZalgoPromise<T> | T
-): ZalgoPromise<T> {
+export function promiseIdentity<T extends unknown>(item: ZalgoPromise<T> | T): ZalgoPromise<T> {
     return ZalgoPromise.resolve(item);
 }
-export function memoizePromise<R>(
-    method: (...args: ReadonlyArray<any>) => ZalgoPromise<R>
-): (...args: ReadonlyArray<any>) => ZalgoPromise<R> {
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function memoizePromise<R>(method: (...args: ReadonlyArray<any>) => ZalgoPromise<R>): (...args: ReadonlyArray<any>) => ZalgoPromise<R> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let cache: Record<string, any> = {};
 
-    function memoizedPromiseFunction(
-        ...args: ReadonlyArray<any>
-    ): ZalgoPromise<R> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function memoizedPromiseFunction(...args: ReadonlyArray<any>): ZalgoPromise<R> {
         const key: string = serializeArgs(args);
 
         if (cache.hasOwnProperty(key)) {
@@ -250,10 +234,7 @@ export function memoizePromise<R>(
         cache = {};
     };
 
-    return setFunctionName(
-        memoizedPromiseFunction,
-        `${ getFunctionName(method) }::promiseMemoized`
-    );
+    return setFunctionName(memoizedPromiseFunction, `${ getFunctionName(method) }::promiseMemoized`);
 }
 type PromisifyOptions = {
     name?: string;
@@ -263,10 +244,8 @@ const getDefaultPromisifyOptions = (): PromisifyOptions => {
     return {};
 };
 
-export function promisify<R>(
-    method: (...args: ReadonlyArray<any>) => R,
-    options: PromisifyOptions = getDefaultPromisifyOptions()
-): (...args: ReadonlyArray<any>) => ZalgoPromise<R> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function promisify<R>(method: (...args: ReadonlyArray<any>) => R, options: PromisifyOptions = getDefaultPromisifyOptions()): (...args: ReadonlyArray<any>) => ZalgoPromise<R> {
     function promisifiedFunction(): ZalgoPromise<R> {
         // @ts-ignore
         return ZalgoPromise.try(method, this, arguments);
@@ -276,19 +255,12 @@ export function promisify<R>(
         promisifiedFunction.displayName = `${ options.name }:promisified`;
     }
 
-    return setFunctionName(
-        promisifiedFunction,
-        `${ getFunctionName(method) }::promisified`
-    );
+    return setFunctionName(promisifiedFunction, `${ getFunctionName(method) }::promisified`);
 }
-export function inlineMemoize<R>(
-    // eslint-disable-next-line no-shadow
-    method: (...args: ReadonlyArray<any>) => R,
-    // eslint-disable-next-line no-shadow
-    logic: (...args: ReadonlyArray<any>) => R,
-    args: ReadonlyArray<any> = []
-): R {
-    // @ts-ignore
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, no-shadow
+export function inlineMemoize<R>(method: (...args: ReadonlyArray<any>) => R, logic: (...args: ReadonlyArray<any>) => R, args: ReadonlyArray<any> = []): R {
+    // @ts-ignore method.__inline_memoize_cache__ not in type def
     const cache: Record<string, R> = (method.__inline_memoize_cache__ = method.__inline_memoize_cache__ || {});
     const key = serializeArgs(args);
 
@@ -305,9 +277,8 @@ export function noop(...args: ReadonlyArray<unknown>): void {
     // pass
 }
 
-export function once(
-    method: (...args: Array<any>) => any
-): (...args: Array<any>) => any {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function once(method: (...args: Array<any>) => any): (...args: Array<any>) => any {
     let called = false;
 
     const onceFunction = function (): unknown {
@@ -320,6 +291,7 @@ export function once(
 
     return setFunctionName(onceFunction, `${ getFunctionName(method) }::once`);
 }
+
 export function hashStr(str: string): number {
     let hash = 0;
 
@@ -351,10 +323,7 @@ export function match(str: string, pattern: RegExp): string | null | undefined {
         return regmatch[1];
     }
 }
-export function awaitKey<T extends unknown>(
-    obj: Record<string, any>,
-    key: string
-): ZalgoPromise<T> {
+export function awaitKey<T extends unknown>(obj: Record<string, T>, key: string): ZalgoPromise<T> {
     return new ZalgoPromise((resolve: Function) => {
         let value = obj[key];
 
@@ -419,16 +388,11 @@ export function stringifyError(err: unknown, level = 1): string {
 
         return Object.prototype.toString.call(err);
     } catch (newErr) {
-        return `Error while stringifying error: ${ stringifyError(
-            newErr,
-            level + 1
-        ) }`;
+        return `Error while stringifying error: ${ stringifyError(newErr, level + 1) }`;
     }
 }
 export function stringifyErrorMessage(err: Error): string {
-    const defaultMessage = `<unknown error: ${ Object.prototype.toString.call(
-        err
-    ) }>`;
+    const defaultMessage = `<unknown error: ${ Object.prototype.toString.call(err) }>`;
 
     if (!err) {
         return defaultMessage;
@@ -446,6 +410,7 @@ export function stringifyErrorMessage(err: Error): string {
 
     return defaultMessage;
 }
+
 export function stringify(item: unknown): string {
     if (typeof item === 'string') {
         return item;
@@ -459,16 +424,15 @@ export function stringify(item: unknown): string {
 
     return Object.prototype.toString.call(item);
 }
+
 export function domainMatches(hostname: string, domain: string): boolean {
     hostname = hostname.split('://')[1];
     const index = hostname.indexOf(domain);
     return index !== -1 && hostname.slice(index) === domain;
 }
-export function patchMethod(
-    obj: Record<string, any>,
-    name: string,
-    handler: (...args: Array<any>) => any
-): void {
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function patchMethod(obj: Record<string, any>, name: string, handler: (...args: Array<any>) => any): void {
     const original = obj[name];
 
     obj[name] = function patchedMethod(): unknown {
@@ -481,9 +445,8 @@ export function patchMethod(
         });
     };
 }
-export function extend<
-    T extends Record<string, any> | ((...args: Array<any>) => any)
->(obj: T, source: Record<string, any>): T {
+
+export function extend<T>(obj: Record<string, T>, source: Record<string, T>): Record<string, T> {
     if (!source) {
         return obj;
     }
@@ -501,6 +464,7 @@ export function extend<
 
     return obj;
 }
+
 export function values<T>(obj: Record<string, T>): ReadonlyArray<T> {
     if (Object.values) {
         return Object.values(obj);
@@ -516,8 +480,7 @@ export function values<T>(obj: Record<string, T>): ReadonlyArray<T> {
 
     return result;
 }
-export const memoizedValues: <T>(arg0: Record<string, T>) => ReadonlyArray<T> =
-    memoize(values);
+export const memoizedValues: <T>(arg0: Record<string, T>) => ReadonlyArray<T> = memoize(values);
 export function perc(pixels: number, percentage: number): number {
     return Math.round((pixels * percentage) / 100);
 }
@@ -531,11 +494,7 @@ export function roundUp(num: number, nearest: number): number {
     const remainder = num % nearest;
     return remainder ? num - remainder + nearest : num;
 }
-export function regexMap<T>(
-    str: string,
-    regexp: RegExp,
-    handler: () => T
-): ReadonlyArray<T> {
+export function regexMap<T>(str: string, regexp: RegExp, handler: () => T): ReadonlyArray<T> {
     const results: T[] = [];
     // @ts-ignore
     str.replace(regexp, function regexMapMatcher(item: string) {
@@ -567,10 +526,7 @@ export function objFilter<T, R>(
 export function identity<T>(item: T): T {
     return item;
 }
-export function regexTokenize(
-    text: string,
-    regexp: RegExp
-): ReadonlyArray<string> {
+export function regexTokenize(text: string, regexp: RegExp): ReadonlyArray<string> {
     const result: string[] = [];
     text.replace(regexp, (token) => {
         result.push(token);
@@ -578,12 +534,9 @@ export function regexTokenize(
     });
     return result;
 }
-export function promiseDebounce<T>(
-    method: () => ZalgoPromise<T> | T,
-    delay = 50
-): () => ZalgoPromise<T> {
-    let promise: any;
-    let timeout: any;
+export function promiseDebounce<T>(method: () => ZalgoPromise<T> | T, delay = 50): () => ZalgoPromise<T> {
+    let promise: ZalgoPromise<T> | null;
+    let timeout: NodeJS.Timeout | null;
 
     const promiseDebounced = function (): ZalgoPromise<T> {
         if (timeout) {
@@ -606,18 +559,14 @@ export function promiseDebounce<T>(
         return localPromise;
     };
 
-    return setFunctionName(
-        promiseDebounced,
-        `${ getFunctionName(method) }::promiseDebounced`
-    );
+    return setFunctionName(promiseDebounced, `${ getFunctionName(method) }::promiseDebounced`);
 }
-export function safeInterval(
-    method: (...args: Array<any>) => any,
-    time: number
-): {
+
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+export function safeInterval(method: (...args: Array<any>) => any, time: number): {
     cancel: () => void;
 } {
-    let timeout: any;
+    let timeout: NodeJS.Timeout;
 
     function loop() {
         timeout = setTimeout(() => {
@@ -656,24 +605,22 @@ export function deserializePrimitive(value: string): string | number | boolean {
     }
 }
 export function dotify(
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     obj: Record<string, any>,
     prefix = '',
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     newobj: Record<string, any> = {}
 ): Record<string, string> {
     prefix = prefix ? `${ prefix }.` : prefix;
 
     for (const key in obj) {
-        if (
-            !obj.hasOwnProperty(key) ||
-            obj[key] === undefined ||
-            obj[key] === null ||
-            typeof obj[key] === 'function'
-        ) {
+        if (!obj.hasOwnProperty(key) || obj[key] === undefined || obj[key] === null || typeof obj[key] === 'function') {
             continue;
         } else if (
             obj[key] &&
             Array.isArray(obj[key]) &&
             obj[key].length &&
+            // eslint-disable-next-line  @typescript-eslint/no-explicit-any
             obj[key].every((val: any) => typeof val !== 'object')
         ) {
             newobj[`${ prefix }${ key }[]`] = obj[key].join(',');
@@ -686,7 +633,9 @@ export function dotify(
 
     return newobj;
 }
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 export function undotify(obj: Record<string, string>): Record<string, any> {
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     const result: Record<string, any> = {};
 
     for (let key in obj) {
@@ -694,6 +643,7 @@ export function undotify(obj: Record<string, string>): Record<string, any> {
             continue;
         }
 
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
         let value: any = obj[key];
 
         if (key.match(/^.+\[\]$/)) {
@@ -711,19 +661,14 @@ export function undotify(obj: Record<string, string>): Record<string, any> {
             const isLast = i + 1 === parts.length;
             const isIndex = !isLast && isInteger(parts[i + 1]);
 
-            if (
-                part === 'constructor' ||
-                part === 'prototype' ||
-                part === '__proto__'
-            ) {
+            if (part === 'constructor' || part === 'prototype' || part === '__proto__') {
                 throw new Error(`Disallowed key: ${ part }`);
             }
 
             if (isLast) {
                 keyResult[part] = value;
             } else {
-                keyResult = keyResult[part] =
-                    keyResult[part] || (isIndex ? [] : {});
+                keyResult = keyResult[part] = keyResult[part] || (isIndex ? [] : {});
             }
         }
     }
@@ -731,32 +676,20 @@ export function undotify(obj: Record<string, string>): Record<string, any> {
     return result;
 }
 export type EventEmitterType = {
-    on: (
-        eventName: string,
-        handler: (...args: Array<any>) => any
-    ) => CancelableType;
-    once: (
-        eventName: string,
-        handler: (...args: Array<any>) => any
-    ) => CancelableType;
-    trigger: (
-        eventName: string,
-        ...args: ReadonlyArray<unknown>
-    ) => ZalgoPromise<void>;
-    triggerOnce: (
-        eventName: string,
-        ...args: ReadonlyArray<unknown>
-    ) => ZalgoPromise<void>;
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    on: (eventName: string, handler: (...args: Array<any>) => any) => CancelableType;
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    once: (eventName: string, handler: (...args: Array<any>) => any) => CancelableType;
+    trigger: (eventName: string, ...args: ReadonlyArray<unknown>) => ZalgoPromise<void>;
+    triggerOnce: (eventName: string, ...args: ReadonlyArray<unknown>) => ZalgoPromise<void>;
     reset: () => void;
 };
 export function eventEmitter(): EventEmitterType {
     const triggered = {};
     let handlers = {};
     const emitter = {
-        on(
-            eventName: string,
-            handler: (...args: Array<any>) => any
-        ): CancelableType {
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+        on(eventName: string, handler: (...args: Array<any>) => any): CancelableType {
             // @ts-ignore
             const handlerList = (handlers[eventName] = handlers[eventName] || []);
             handlerList.push(handler);
@@ -771,10 +704,8 @@ export function eventEmitter(): EventEmitterType {
             };
         },
 
-        once(
-            eventName: string,
-            handler: (...args: Array<any>) => any
-        ): CancelableType {
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+        once(eventName: string, handler: (...args: Array<any>) => any): CancelableType {
             const listener = emitter.on(eventName, () => {
                 listener.cancel();
                 handler();
@@ -782,10 +713,7 @@ export function eventEmitter(): EventEmitterType {
             return listener;
         },
 
-        trigger(
-            eventName: string,
-            ...args: ReadonlyArray<unknown>
-        ): ZalgoPromise<void> {
+        trigger(eventName: string, ...args: ReadonlyArray<unknown>): ZalgoPromise<void> {
             // @ts-ignore
             const handlerList = handlers[eventName];
             const promises = [];
@@ -799,10 +727,7 @@ export function eventEmitter(): EventEmitterType {
             return ZalgoPromise.all(promises).then(noop);
         },
 
-        triggerOnce(
-            eventName: string,
-            ...args: ReadonlyArray<unknown>
-        ): ZalgoPromise<void> {
+        triggerOnce(eventName: string, ...args: ReadonlyArray<unknown>): ZalgoPromise<void> {
             // @ts-ignore
             if (triggered[eventName]) {
                 return ZalgoPromise.resolve();
@@ -832,11 +757,9 @@ export function dasherizeToCamel(string: string): string {
 export function capitalizeFirstLetter(string: string): string {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
-export function get(
-    item: Record<string, any>,
-    path: string,
-    def: unknown
-): unknown {
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function get(item: Record<string, any>, path: string, def: unknown): unknown {
     if (!path) {
         return def;
     }
@@ -856,10 +779,9 @@ export function get(
     // If our final result is undefined, we should return the default
     return item === undefined ? def : item;
 }
-export function safeTimeout(
-    method: (...args: Array<any>) => any,
-    time: number
-): void {
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function safeTimeout(method: (...args: Array<any>) => any, time: number): void {
     const interval = safeInterval(() => {
         time -= 100;
 
@@ -869,8 +791,9 @@ export function safeTimeout(
         }
     }, 100);
 }
+
 export function defineLazyProp<T>(
-    obj: Record<string, any> | ReadonlyArray<unknown>,
+    obj: Record<string, T> | ReadonlyArray<unknown>,
     key: string | number,
     getter: () => T
 ): void {
@@ -910,10 +833,7 @@ export function isObject(item: unknown): boolean {
     return typeof item === 'object' && item !== null;
 }
 export function isObjectObject(obj: unknown): boolean {
-    return (
-        isObject(obj) &&
-        Object.prototype.toString.call(obj) === '[object Object]'
-    );
+    return isObject(obj) && Object.prototype.toString.call(obj) === '[object Object]';
 }
 export function isPlainObject(obj: unknown): boolean {
     if (!isObjectObject(obj)) {
@@ -939,9 +859,9 @@ export function isPlainObject(obj: unknown): boolean {
 
     return true;
 }
-export function replaceObject<
-    T extends ReadonlyArray<unknown> | Record<string, any>
->(
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function replaceObject<T extends ReadonlyArray<unknown> | Record<string, any>>(
     item: T,
     replacer: (arg0: unknown, arg1: string | number, arg2: string) => unknown,
     fullKey = ''
@@ -995,12 +915,9 @@ export function replaceObject<
         throw new Error(`Pass an object or array`);
     }
 }
-export function copyProp(
-    source: Record<string, any>,
-    target: Record<string, any>,
-    name: string,
-    def: unknown
-): void {
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function copyProp(source: Record<string, any>, target: Record<string, any>, name: string, def: unknown): void {
     if (source.hasOwnProperty(name)) {
         const descriptor = Object.getOwnPropertyDescriptor(source, name);
         // @ts-ignore
@@ -1009,6 +926,7 @@ export function copyProp(
         target[name] = def;
     }
 }
+
 type RegexResultType = {
     text: string;
     groups: ReadonlyArray<string>;
@@ -1017,11 +935,8 @@ type RegexResultType = {
     length: number;
     replace: (text: string) => string;
 };
-export function regex(
-    pattern: string | RegExp,
-    string: string,
-    start = 0
-): RegexResultType | null | undefined {
+
+export function regex(pattern: string | RegExp, string: string, start = 0): RegexResultType | null | undefined {
     if (typeof pattern === 'string') {
         // eslint-disable-next-line security/detect-non-literal-regexp
         pattern = new RegExp(pattern);
@@ -1047,16 +962,11 @@ export function regex(
                 return '';
             }
 
-            return `${ regmatch.slice(0, start + index) }${ text }${ regmatch.slice(
-                index + regmatch.length
-            ) }`;
+            return `${ regmatch.slice(0, start + index) }${ text }${ regmatch.slice(index + regmatch.length) }`;
         }
     };
 }
-export function regexAll(
-    pattern: string | RegExp,
-    string: string
-): ReadonlyArray<RegexResultType> {
+export function regexAll(pattern: string | RegExp, string: string): ReadonlyArray<RegexResultType> {
     const matches = [];
     let start = 0;
 
@@ -1078,9 +988,8 @@ export function regexAll(
 export function isDefined(value: unknown | null | undefined): boolean {
     return value !== null && value !== undefined;
 }
-export function cycle(
-    method: (...args: Array<any>) => any
-): ZalgoPromise<void> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function cycle(method: (...args: Array<any>) => any): ZalgoPromise<void> {
     // @ts-ignore - not even sure what to do with this
     return ZalgoPromise.try(method).then(() => cycle(method));
 }
@@ -1098,10 +1007,7 @@ export function debounce<T>(
         }, time);
     };
 
-    return setFunctionName(
-        debounceWrapper,
-        `${ getFunctionName(method) }::debounced`
-    );
+    return setFunctionName(debounceWrapper, `${ getFunctionName(method) }::debounced`);
 }
 export function isRegex(item: unknown): boolean {
     return Object.prototype.toString.call(item) === '[object RegExp]';
@@ -1116,16 +1022,14 @@ export const weakMapMemoize: FunctionProxy<any> = <R extends unknown>(
         return weakmap.getOrSet(arg, () => method.call(this, arg));
     };
 };
-type FunctionPromiseProxy<
-    R extends unknown,
-    T extends (...args: ReadonlyArray<unknown>) => ZalgoPromise<R>
-> = (arg0: T) => T;
-export const weakMapMemoizePromise: FunctionPromiseProxy<any, any> = <
-    R extends unknown
->(
-        method: (arg: any) => ZalgoPromise<R>
-    ): ((...args: ReadonlyArray<any>) => ZalgoPromise<R>) => {
+type FunctionPromiseProxy<R extends unknown, T extends (...args: ReadonlyArray<unknown>) => ZalgoPromise<R>> = (
+    arg0: T
+) => T;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const weakMapMemoizePromise: FunctionPromiseProxy<any, any> = <R extends unknown>(method: (arg: any) => ZalgoPromise<R>): ((...args: ReadonlyArray<any>) => ZalgoPromise<R>) => {
     const weakmap = new WeakMap();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function weakmapMemoizedPromise(arg: any): ZalgoPromise<R> {
         // @ts-ignore
         return weakmap.getOrSet(arg, () =>
@@ -1135,11 +1039,9 @@ export const weakMapMemoizePromise: FunctionPromiseProxy<any, any> = <
             }));
     };
 };
-export function getOrSet<T extends unknown>(
-    obj: Record<string, any>,
-    key: string,
-    getter: () => T
-): T {
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getOrSet<T extends unknown>(obj: Record<string, any>, key: string, getter: () => T): T {
     if (obj.hasOwnProperty(key)) {
         return obj[key];
     }
@@ -1150,12 +1052,17 @@ export function getOrSet<T extends unknown>(
 }
 export type CleanupType = {
     set: <T extends unknown>(arg0: string, arg1: T) => T;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     register: (arg0: (...args: Array<any>) => any) => void;
     all: (err?: unknown) => ZalgoPromise<void>;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function cleanup(obj: Record<string, any>): CleanupType {
-    const tasks: any = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const tasks: Array<any> = [];
     let cleaned = false;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let cleanErr: any;
     const cleaner = {
         set<T extends unknown>(name: string, item: T): T {
@@ -1169,6 +1076,7 @@ export function cleanup(obj: Record<string, any>): CleanupType {
             return item;
         },
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         register(method: (...args: Array<any>) => any) {
             if (cleaned) {
                 method(cleanErr);
@@ -1238,18 +1146,13 @@ export function unique(arr: ReadonlyArray<string>): ReadonlyArray<string> {
 
     return Object.keys(result);
 }
-export const constHas = <
-    X extends string | boolean | number,
-    T extends Record<string, X>
->(
-        constant: T,
-        value: X
-    ): boolean => {
+export const constHas = <X extends string | boolean | number, T extends Record<string, X>>(
+    constant: T,
+    value: X
+): boolean => {
     return memoizedValues(constant).indexOf(value) !== -1;
 };
-export function dedupeErrors<T>(
-    handler: (arg0: unknown) => T
-): (arg0: unknown) => T | void {
+export function dedupeErrors<T>(handler: (arg0: unknown) => T): (arg0: unknown) => T | void {
     const seenErrors: unknown[] = [];
     const seenStringifiedErrors: Record<string, unknown> = {};
     return (err) => {

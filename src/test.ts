@@ -4,10 +4,7 @@ import { noop, tryCatch, removeFromArray } from './util';
 
 type Prom<X> = Promise<X> | ZalgoPromise<X>;
 
-type Handler = <T, A extends ReadonlyArray<unknown>>(
-    name: string,
-    fn?: (...args: A) => T
-) => (...args: A) => T;
+type Handler = <T, A extends ReadonlyArray<unknown>>(name: string, fn?: (...args: A) => T) => (...args: A) => T;
 type Wrapper<T> = (arg0: {
     expect: Handler;
     avoid: Handler;
@@ -16,38 +13,19 @@ type Wrapper<T> = (arg0: {
     wait: () => Prom<void>;
 }) => Prom<T> | void;
 
-export function wrapPromise<T>(
-    method: Wrapper<T>,
-    {
-        timeout = 5000
-    }: {
-        timeout?: number;
-    } = {}
-): ZalgoPromise<void> {
-    const expected: Array<{
-        name: string;
-        handler: Handler;
-    }> = [];
-    const promises: Array<{
-        name: string;
-        promise: ZalgoPromise<any>;
-    }> = [];
-    return new ZalgoPromise((resolve: Function, reject: Function) => {
+export function wrapPromise<T>(method: Wrapper<T>, { timeout = 5000 }: { timeout?: number; } = {}): ZalgoPromise<void> {
+    const expected: Array<{ name: string; handler: Handler; }> = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const promises: Array<{ name: string; promise: ZalgoPromise<any>; }> = [];
+
+    return new ZalgoPromise((resolve, reject) => {
         const timer = setTimeout(() => {
             if (expected.length) {
-                reject(
-                    new Error(
-                        `Expected ${ expected[0].name } to be called in ${ timeout }ms`
-                    )
-                );
+                reject(new Error(`Expected ${ expected[0].name } to be called in ${ timeout }ms`));
             }
 
             if (promises.length) {
-                reject(
-                    new Error(
-                        `Expected ${ promises[0].name } promise to complete in ${ timeout }ms`
-                    )
-                );
+                reject(new Error(`Expected ${ promises[0].name } promise to complete in ${ timeout }ms`));
             }
         }, timeout);
 
@@ -59,7 +37,8 @@ export function wrapPromise<T>(
             };
             // @ts-ignore
             expected.push(exp);
-            // @ts-ignore
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return function expectWrapper(...args): any {
                 // @ts-ignore
                 removeFromArray(expected, exp);
@@ -87,12 +66,11 @@ export function wrapPromise<T>(
 
         // @ts-ignore
         const avoid: Handler = (name: string, fn = noop) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return function avoidWrapper(...args): any {
                 promises.push({
                     name,
-                    promise: ZalgoPromise.asyncReject(
-                        new Error(`Expected ${ name } to not be called`)
-                    )
+                    promise: ZalgoPromise.asyncReject(new Error(`Expected ${ name } to not be called`))
                 });
                 // @ts-ignore
                 return fn.call(this, ...args);
@@ -108,6 +86,7 @@ export function wrapPromise<T>(
             // @ts-ignore
             expected.push(exp);
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             return function expectErrorWrapper(...args): any {
                 // @ts-ignore
                 removeFromArray(expected, exp);
@@ -131,6 +110,7 @@ export function wrapPromise<T>(
             };
         };
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const wait = (): any => {
             return ZalgoPromise.try(() => {
                 if (promises.length) {

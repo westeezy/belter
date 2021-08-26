@@ -37,8 +37,7 @@ function getRandomInteger(range: number): number {
 function getThrottlePercentile(name: string): number {
     return getBelterExperimentStorage().getState((state) => {
         state.throttlePercentiles = state.throttlePercentiles || {};
-        state.throttlePercentiles[name] =
-            state.throttlePercentiles[name] || getRandomInteger(100);
+        state.throttlePercentiles[name] = state.throttlePercentiles[name] || getRandomInteger(100);
         return state.throttlePercentiles[name];
     });
 }
@@ -51,12 +50,7 @@ const THROTTLE_GROUP = {
 type ExperimentOptions = {
     name: string;
     sample?: number;
-    logTreatment?: (arg0: {
-        name: string;
-        treatment: string;
-        payload: Payload;
-        throttle: number;
-    }) => void;
+    logTreatment?: (arg0: { name: string; treatment: string; payload: Payload; throttle: number }) => void;
     logCheckpoint?: (arg0: {
         name: string;
         treatment: string;
@@ -73,9 +67,7 @@ export function experiment({
     logCheckpoint = noop,
     sticky = true
 }: ExperimentOptions): Experiment {
-    const throttle = sticky
-        ? getThrottlePercentile(name)
-        : getRandomInteger(100);
+    const throttle = sticky ? getThrottlePercentile(name) : getRandomInteger(100);
     let group: string;
 
     // @ts-ignore __TEST__ global for test env
@@ -126,11 +118,7 @@ export function experiment({
                 });
             }
 
-            if (
-                isEventUnique(
-                    `${ treatment }_${ checkpoint }_${ JSON.stringify(payload) }`
-                )
-            ) {
+            if (isEventUnique(`${ treatment }_${ checkpoint }_${ JSON.stringify(payload) }`)) {
                 logCheckpoint({
                     name,
                     treatment,

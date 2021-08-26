@@ -18,9 +18,7 @@ export function isDevice(userAgent: string = getUserAgent()): boolean {
 export function isWebView(): boolean {
     const userAgent = getUserAgent();
     return (
-        (/(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)|.*WKWebView/i).test(
-            userAgent
-        ) ||
+        (/(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)|.*WKWebView/i).test(userAgent) ||
         (/\bwv\b/).test(userAgent) ||
         (/Android.*Version\/(\d)\.(\d)/i).test(userAgent)
     );
@@ -28,8 +26,7 @@ export function isWebView(): boolean {
 export function isStandAlone(): boolean {
     return (
         // @ts-ignore - standalone does not exist natively
-        window.navigator.standalone === true ||
-        window.matchMedia('(display-mode: standalone)').matches
+        window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches
     );
 }
 export function isFacebookWebView(ua: string = getUserAgent()): boolean {
@@ -80,8 +77,7 @@ export function isSFVC(ua: string = getUserAgent()): boolean {
         }
 
         const height = window.innerHeight;
-        const scale =
-            Math.round((window.screen.width / window.innerWidth) * 100) / 100;
+        const scale = Math.round((window.screen.width / window.innerWidth) * 100) / 100;
         const computedHeight = Math.round(height * scale);
 
         if (scale > 1 && device.zoomHeight[scale]) {
@@ -104,17 +100,12 @@ export function isSFVCorSafari(ua: string = getUserAgent()): boolean {
         }
 
         const height = window.innerHeight;
-        const scale =
-            Math.round((window.screen.width / window.innerWidth) * 100) / 100;
+        const scale = Math.round((window.screen.width / window.innerWidth) * 100) / 100;
         const computedHeight = Math.round(height * scale);
         const possibleSafariSizes = device.maybeSafari;
         let maybeSafari = false;
 
-        if (
-            scale > 1 &&
-            possibleSafariSizes[scale] &&
-            possibleSafariSizes[scale].indexOf(computedHeight) !== -1
-        ) {
+        if (scale > 1 && possibleSafariSizes[scale] && possibleSafariSizes[scale].indexOf(computedHeight) !== -1) {
             maybeSafari = true;
         }
 
@@ -137,15 +128,11 @@ export function isIE(): boolean {
     }
 
     return Boolean(
-        window.navigator &&
-            window.navigator.userAgent &&
-            (/Edge|MSIE|rv:11/i).test(window.navigator.userAgent)
+        window.navigator && window.navigator.userAgent && (/Edge|MSIE|rv:11/i).test(window.navigator.userAgent)
     );
 }
 export function isIECompHeader(): boolean {
-    const mHttp = window.document.querySelector(
-        'meta[http-equiv="X-UA-Compatible"]'
-    );
+    const mHttp = window.document.querySelector('meta[http-equiv="X-UA-Compatible"]');
     const mContent = window.document.querySelector('meta[content="IE=edge"]');
 
     if (mHttp && mContent) {
@@ -155,11 +142,7 @@ export function isIECompHeader(): boolean {
     return false;
 }
 export function isElectron(): boolean {
-    if (
-        typeof process !== 'undefined' &&
-        process.versions &&
-        process.versions.electron
-    ) {
+    if (typeof process !== 'undefined' && process.versions && process.versions.electron) {
         return true;
     }
 

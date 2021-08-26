@@ -47,9 +47,7 @@ export function request({
 }: RequestOptionsType): ZalgoPromise<ResponseType> {
     return new ZalgoPromise((resolve, reject) => {
         if ((json && data) || (json && body) || (data && json)) {
-            throw new Error(
-                `Only options.json or options.data or options.body should be passed`
-            );
+            throw new Error(`Only options.json or options.data or options.body should be passed`);
         }
 
         const normalizedHeaders: Record<string, string> = {};
@@ -59,16 +57,13 @@ export function request({
         }
 
         if (json) {
-            normalizedHeaders[HEADERS.CONTENT_TYPE] =
-                normalizedHeaders[HEADERS.CONTENT_TYPE] || 'application/json';
+            normalizedHeaders[HEADERS.CONTENT_TYPE] = normalizedHeaders[HEADERS.CONTENT_TYPE] || 'application/json';
         } else if (data || body) {
             normalizedHeaders[HEADERS.CONTENT_TYPE] =
-                normalizedHeaders[HEADERS.CONTENT_TYPE] ||
-                'application/x-www-form-urlencoded; charset=utf-8';
+                normalizedHeaders[HEADERS.CONTENT_TYPE] || 'application/x-www-form-urlencoded; charset=utf-8';
         }
 
-        normalizedHeaders[HEADERS.ACCEPT] =
-            normalizedHeaders[HEADERS.ACCEPT] || 'application/json';
+        normalizedHeaders[HEADERS.ACCEPT] = normalizedHeaders[HEADERS.ACCEPT] || 'application/json';
 
         for (const headerBuilder of headerBuilders) {
             const builtHeaders = headerBuilder();
@@ -91,17 +86,14 @@ export function request({
                 // @ts-ignore no annotation for this
                 if (!this.status) {
                     return reject(
-                        new Error(
-                            `Request to ${ method.toLowerCase() } ${ url } failed: no response status code.`
-                        )
+                        new Error(`Request to ${ method.toLowerCase() } ${ url } failed: no response status code.`)
                     );
                 }
 
                 const contentType = responseHeaders['content-type'];
                 const isJSON =
                     contentType &&
-                    (contentType.indexOf('application/json') === 0 ||
-                        contentType.indexOf('text/json') === 0);
+                    (contentType.indexOf('application/json') === 0 || contentType.indexOf('text/json') === 0);
                 // @ts-ignore no annotation for this
                 let responseBody = this.responseText;
 
@@ -129,11 +121,7 @@ export function request({
         xhr.addEventListener(
             'error',
             (evt: Event) => {
-                reject(
-                    new Error(
-                        `Request to ${ method.toLowerCase() } ${ url } failed: ${ evt.toString() }.`
-                    )
-                );
+                reject(new Error(`Request to ${ method.toLowerCase() } ${ url } failed: ${ evt.toString() }.`));
             },
             false
         );
@@ -150,9 +138,7 @@ export function request({
         } else if (data) {
             body = Object.keys(data)
                 .map((key) => {
-                    return `${ encodeURIComponent(key) }=${
-                        data ? encodeURIComponent(data[key]) : ''
-                    }`;
+                    return `${ encodeURIComponent(key) }=${ data ? encodeURIComponent(data[key]) : '' }`;
                 })
                 .join('&');
         }
@@ -160,11 +146,7 @@ export function request({
         xhr.timeout = timeout;
 
         xhr.ontimeout = function xhrTimeout() {
-            reject(
-                new Error(
-                    `Request to ${ method.toLowerCase() } ${ url } has timed out`
-                )
-            );
+            reject(new Error(`Request to ${ method.toLowerCase() } ${ url } has timed out`));
         };
 
         xhr.send(body);

@@ -13,13 +13,7 @@ export type Storage = {
     getSessionID: () => string;
 };
 const DEFAULT_SESSION_STORAGE = 20 * 60 * 1000;
-export function getStorage({
-    name,
-    lifetime = DEFAULT_SESSION_STORAGE
-}: {
-    name: string;
-    lifetime?: number;
-}): Storage {
+export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE }: { name: string; lifetime?: number }): Storage {
     return inlineMemoize(
         getStorage,
         () => {
@@ -64,10 +58,7 @@ export function getStorage({
                 const result = handler(storage);
 
                 if (localStorageEnabled) {
-                    window.localStorage.setItem(
-                        STORAGE_KEY,
-                        JSON.stringify(storage)
-                    );
+                    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
                 } else {
                     getGlobal()[STORAGE_KEY] = storage;
                 }
