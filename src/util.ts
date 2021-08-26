@@ -1012,11 +1012,13 @@ export function debounce<T>(
 export function isRegex(item: unknown): boolean {
     return Object.prototype.toString.call(item) === '[object RegExp]';
 }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type FunctionProxy<T extends (...args: Array<any>) => any> = (method: T) => T;
-export const weakMapMemoize: FunctionProxy<any> = <R extends unknown>(
-    method: (arg: any) => R
-): ((...args: ReadonlyArray<any>) => R) => {
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const weakMapMemoize: FunctionProxy<any> = <R extends unknown>(method: (arg: any) => R): ((...args: ReadonlyArray<any>) => R) => {
     const weakmap = new WeakMap();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return function weakmapMemoized(arg: any): R {
         // @ts-ignore
         return weakmap.getOrSet(arg, () => method.call(this, arg));
