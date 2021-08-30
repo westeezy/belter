@@ -1,5 +1,5 @@
-import { ZalgoPromise } from 'zalgo-promise';
-import type { SameDomainWindowType } from 'cross-domain-utils';
+import { ZalgoPromise } from 'zalgo-promise/src';
+import type { SameDomainWindowType } from 'cross-domain-utils/src';
 
 type RequestOptionsType = {
     url : string;

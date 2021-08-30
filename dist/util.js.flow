@@ -5,15 +5,10 @@
  * @flow
  */
 
-import { ZalgoPromise } from "zalgo-promise";
+import { ZalgoPromise } from "zalgo-promise/src";
 import type { CancelableType } from "./types";
-declare export function getFunctionName<T: (...args: Array<any>) => any>(
-  fn: T
-): string;
-declare export function setFunctionName<T: (...args: Array<any>) => any>(
-  fn: T,
-  name: string
-): T;
+declare export function getFunctionName(fn: Function): string;
+declare export function setFunctionName<T: Function>(fn: T, name: string): T;
 declare export function base64encode(str: string): string;
 declare export function base64decode(str: string): string;
 declare export function uniqueID(): string;
@@ -36,10 +31,7 @@ export type Memoized<F> = {
 declare var memoize: typeof npm$namespace$memoize;
 
 declare var npm$namespace$memoize: {|
-  <F: (...args: Array<any>) => any>(
-    method: F,
-    options?: MemoizeOptions
-  ): Memoized<F>,
+  <F: Function>(method: F, options?: MemoizeOptions): Memoized<F>,
   clear: typeof memoize$clear,
 |};
 declare var memoize$clear: () => void;
@@ -73,7 +65,7 @@ declare export function match(
   pattern: RegExp
 ): string | null | void;
 declare export function awaitKey<T: mixed>(
-  obj: { [key: string]: any, ... },
+  obj: { [key: string]: T, ... },
   key: string
 ): ZalgoPromise<T>;
 declare export function stringifyError(err: mixed, level?: number): string;
@@ -88,12 +80,10 @@ declare export function patchMethod(
   name: string,
   handler: (...args: Array<any>) => any
 ): void;
-declare export function extend<
-  T: { [key: string]: any, ... } | ((...args: Array<any>) => any)
->(
-  obj: T,
-  source: { [key: string]: any, ... }
-): T;
+declare export function extend<T>(
+  obj: { [key: string]: T, ... },
+  source: { [key: string]: T, ... }
+): { [key: string]: T, ... };
 declare export function values<T>(obj: {
   [key: string]: T,
   ...
@@ -183,7 +173,7 @@ declare export function safeTimeout(
   time: number
 ): void;
 declare export function defineLazyProp<T>(
-  obj: { [key: string]: any, ... } | $ReadOnlyArray<mixed>,
+  obj: { [key: string]: T, ... } | $ReadOnlyArray<mixed>,
   key: string | number,
   getter: () => T
 ): void;

@@ -1,4 +1,4 @@
-export declare function getGlobalNameSpace<T extends Record<string, any>>({ name, version }: {
+export declare function getGlobalNameSpace<T extends Record<string, T>>({ name, version }: {
     name: string;
     version?: string;
 }): {

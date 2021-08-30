@@ -1,8 +1,8 @@
 /* eslint max-lines: off, unicorn/prefer-event-key: off */
-import { ZalgoPromise } from 'zalgo-promise';
-import type { SameDomainWindowType, CrossDomainWindowType } from 'cross-domain-utils';
-import { linkFrameWindow, isWindowClosed, assertSameDomain } from 'cross-domain-utils';
-import { WeakMap } from 'cross-domain-safe-weakmap';
+import { ZalgoPromise } from 'zalgo-promise/src';
+import type { SameDomainWindowType, CrossDomainWindowType } from 'cross-domain-utils/src';
+import { linkFrameWindow, isWindowClosed, assertSameDomain } from 'cross-domain-utils/src';
+import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 import {
     inlineMemoize,

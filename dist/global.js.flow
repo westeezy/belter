@@ -5,7 +5,7 @@
  * @flow
  */
 
-declare export function getGlobalNameSpace<T: { [key: string]: any, ... }>(x: {
+declare export function getGlobalNameSpace<T: { [key: string]: T, ... }>(x: {
   name: string,
   version?: string,
   ...

@@ -1,4 +1,4 @@
-declare type Getter<T> = (handler: (arg0: Record<string, any>) => T) => T;
+declare type Getter<T> = (handler: (arg0: Record<string, T>) => T) => T;
 export declare type Storage = {
     getState: Getter<any>;
     getID: () => string;

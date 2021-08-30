@@ -1,7 +1,7 @@
-import { ZalgoPromise } from 'zalgo-promise';
+import { ZalgoPromise } from 'zalgo-promise/src';
 import type { CancelableType } from './types';
-export declare function getFunctionName<T extends (...args: Array<any>) => any>(fn: T): string;
-export declare function setFunctionName<T extends (...args: Array<any>) => any>(fn: T, name: string): T;
+export declare function getFunctionName(fn: Function): string;
+export declare function setFunctionName<T extends Function>(fn: T, name: string): T;
 export declare function base64encode(str: string): string;
 export declare function base64decode(str: string): string;
 export declare function uniqueID(): string;
@@ -16,7 +16,7 @@ declare type MemoizeOptions = {
 export declare type Memoized<F> = F & {
     reset: () => void;
 };
-export declare function memoize<F extends (...args: Array<any>) => any>(method: F, options?: MemoizeOptions): Memoized<F>;
+export declare function memoize<F extends Function>(method: F, options?: MemoizeOptions): Memoized<F>;
 export declare namespace memoize {
     var clear: () => void;
 }
@@ -32,13 +32,13 @@ export declare function once(method: (...args: Array<any>) => any): (...args: Ar
 export declare function hashStr(str: string): number;
 export declare function strHashStr(str: string): string;
 export declare function match(str: string, pattern: RegExp): string | null | undefined;
-export declare function awaitKey<T extends unknown>(obj: Record<string, any>, key: string): ZalgoPromise<T>;
+export declare function awaitKey<T extends unknown>(obj: Record<string, T>, key: string): ZalgoPromise<T>;
 export declare function stringifyError(err: unknown, level?: number): string;
 export declare function stringifyErrorMessage(err: Error): string;
 export declare function stringify(item: unknown): string;
 export declare function domainMatches(hostname: string, domain: string): boolean;
 export declare function patchMethod(obj: Record<string, any>, name: string, handler: (...args: Array<any>) => any): void;
-export declare function extend<T extends Record<string, any> | ((...args: Array<any>) => any)>(obj: T, source: Record<string, any>): T;
+export declare function extend<T>(obj: Record<string, T>, source: Record<string, T>): Record<string, T>;
 export declare function values<T>(obj: Record<string, T>): ReadonlyArray<T>;
 export declare const memoizedValues: <T>(arg0: Record<string, T>) => ReadonlyArray<T>;
 export declare function perc(pixels: number, percentage: number): number;
@@ -73,7 +73,7 @@ export declare function dasherizeToCamel(string: string): string;
 export declare function capitalizeFirstLetter(string: string): string;
 export declare function get(item: Record<string, any>, path: string, def: unknown): unknown;
 export declare function safeTimeout(method: (...args: Array<any>) => any, time: number): void;
-export declare function defineLazyProp<T>(obj: Record<string, any> | ReadonlyArray<unknown>, key: string | number, getter: () => T): void;
+export declare function defineLazyProp<T>(obj: Record<string, T> | ReadonlyArray<unknown>, key: string | number, getter: () => T): void;
 export declare function arrayFrom<T>(item: Iterable<T>): ReadonlyArray<T>;
 export declare function isObject(item: unknown): boolean;
 export declare function isObjectObject(obj: unknown): boolean;

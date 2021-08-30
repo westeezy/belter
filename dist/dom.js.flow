@@ -5,11 +5,11 @@
  * @flow
  */
 
-import { ZalgoPromise } from "zalgo-promise";
+import { ZalgoPromise } from "zalgo-promise/src";
 import type {
   SameDomainWindowType,
   CrossDomainWindowType,
-} from "cross-domain-utils";
+} from "cross-domain-utils/src";
 import { ExtendableError } from "./util";
 import type { CancelableType } from "./types";
 declare type ElementRefType = string | HTMLElement;
@@ -24,7 +24,7 @@ declare export function waitForDocumentBody(): ZalgoPromise<
   HTMLElement | HTMLBodyElement
 >;
 declare export function parseQuery(queryString: string): {
-  [key: string]: any,
+  [key: string]: string,
   ...
 };
 declare export function getQueryParam(name: string): string;
@@ -137,8 +137,8 @@ declare export function awaitFrameWindow(
   frame: HTMLIFrameElement
 ): ZalgoPromise<CrossDomainWindowType>;
 declare export function createElement(
-  tag: string,
-  options: ElementOptionsType,
+  tag: string | void,
+  options: ElementOptionsType | void,
   container: HTMLElement | null | void
 ): HTMLElement;
 declare type StringMap = { [key: string]: string, ... };
@@ -152,7 +152,7 @@ export type IframeElementOptionsType = {
   ...
 };
 declare export function iframe(
-  options: IframeElementOptionsType,
+  options: IframeElementOptionsType | void,
   container: HTMLElement | null | void
 ): HTMLIFrameElement;
 declare export function addEventListener(
@@ -173,7 +173,7 @@ declare export function setVendorCSS(
 declare export function animate(
   element: ElementRefType,
   name: string,
-  clean: (arg0: (...args: Array<any>) => any) => void,
+  clean: (arg0: (...args: Array<mixed>) => void) => void,
   timeout?: number
 ): ZalgoPromise<void>;
 declare export function makeElementVisible(element: HTMLElement): void;
@@ -184,12 +184,12 @@ declare export function destroyElement(element: HTMLElement): void;
 declare export function showAndAnimate(
   element: HTMLElement,
   name: string,
-  clean: (arg0: (...args: Array<any>) => any) => void
+  clean: (arg0: (...args: Array<mixed>) => mixed) => void
 ): ZalgoPromise<void>;
 declare export function animateAndHide(
   element: HTMLElement,
   name: string,
-  clean: (arg0: (...args: Array<any>) => any) => void
+  clean: (arg0: (...args: Array<mixed>) => mixed) => void
 ): ZalgoPromise<void>;
 declare export function addClass(element: HTMLElement, name: string): void;
 declare export function removeClass(element: HTMLElement, name: string): void;

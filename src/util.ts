@@ -1,5 +1,5 @@
 /* eslint max-lines: 0 */
-import { ZalgoPromise } from 'zalgo-promise';
+import { ZalgoPromise } from 'zalgo-promise/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 import type { CancelableType } from './types';

@@ -1,5 +1,5 @@
-import { ZalgoPromise } from 'zalgo-promise';
-import type { SameDomainWindowType, CrossDomainWindowType } from 'cross-domain-utils';
+import { ZalgoPromise } from 'zalgo-promise/src';
+import type { SameDomainWindowType, CrossDomainWindowType } from 'cross-domain-utils/src';
 import { ExtendableError } from './util';
 import type { CancelableType } from './types';
 declare type ElementRefType = string | HTMLElement;
@@ -11,7 +11,7 @@ export declare function waitForWindowReady(): ZalgoPromise<void>;
 declare type WaitForDocumentReady = () => ZalgoPromise<void>;
 export declare const waitForDocumentReady: WaitForDocumentReady;
 export declare function waitForDocumentBody(): ZalgoPromise<HTMLElement | HTMLBodyElement>;
-export declare function parseQuery(queryString: string): Record<string, any>;
+export declare function parseQuery(queryString: string): Record<string, string>;
 export declare function getQueryParam(name: string): string;
 export declare function urlWillRedirectPage(url: string): boolean;
 export declare type Query = Record<string, boolean | string>;
@@ -74,7 +74,7 @@ export declare type ElementOptionsType = {
 };
 export declare function awaitFrameLoad(frame: HTMLIFrameElement): ZalgoPromise<HTMLIFrameElement>;
 export declare function awaitFrameWindow(frame: HTMLIFrameElement): ZalgoPromise<CrossDomainWindowType>;
-export declare function createElement(tag: string, options: ElementOptionsType, container: HTMLElement | null | undefined): HTMLElement;
+export declare function createElement(tag: string | undefined, options: ElementOptionsType | undefined, container: HTMLElement | null | undefined): HTMLElement;
 declare type StringMap = Record<string, string>;
 export declare type IframeElementOptionsType = {
     style?: StringMap;
@@ -84,18 +84,18 @@ export declare type IframeElementOptionsType = {
     html?: string | null | undefined;
     url?: string | null | undefined;
 };
-export declare function iframe(options: IframeElementOptionsType, container: HTMLElement | null | undefined): HTMLIFrameElement;
+export declare function iframe(options: IframeElementOptionsType | undefined, container: HTMLElement | null | undefined): HTMLIFrameElement;
 export declare function addEventListener(obj: HTMLElement, event: string, handler: (event: Event) => void): CancelableType;
 export declare function bindEvents(element: HTMLElement, eventNames: ReadonlyArray<string>, handler: (event: Event) => void): CancelableType;
 export declare function setVendorCSS(element: HTMLElement, name: string, value: string): void;
-export declare function animate(element: ElementRefType, name: string, clean: (arg0: (...args: Array<any>) => any) => void, timeout?: number): ZalgoPromise<void>;
+export declare function animate(element: ElementRefType, name: string, clean: (arg0: (...args: Array<unknown>) => void) => void, timeout?: number): ZalgoPromise<void>;
 export declare function makeElementVisible(element: HTMLElement): void;
 export declare function makeElementInvisible(element: HTMLElement): void;
 export declare function showElement(element: HTMLElement): void;
 export declare function hideElement(element: HTMLElement): void;
 export declare function destroyElement(element: HTMLElement): void;
-export declare function showAndAnimate(element: HTMLElement, name: string, clean: (arg0: (...args: Array<any>) => any) => void): ZalgoPromise<void>;
-export declare function animateAndHide(element: HTMLElement, name: string, clean: (arg0: (...args: Array<any>) => any) => void): ZalgoPromise<void>;
+export declare function showAndAnimate(element: HTMLElement, name: string, clean: (arg0: (...args: Array<unknown>) => unknown) => void): ZalgoPromise<void>;
+export declare function animateAndHide(element: HTMLElement, name: string, clean: (arg0: (...args: Array<unknown>) => unknown) => void): ZalgoPromise<void>;
 export declare function addClass(element: HTMLElement, name: string): void;
 export declare function removeClass(element: HTMLElement, name: string): void;
 export declare function isElementClosed(el: HTMLElement): boolean;

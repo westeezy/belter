@@ -5,9 +5,7 @@
  * @flow
  */
 
-declare type Getter<T> = (
-  handler: (arg0: { [key: string]: any, ... }) => T
-) => T;
+declare type Getter<T> = (handler: (arg0: { [key: string]: T, ... }) => T) => T;
 export type Storage = {
   getState: Getter<any>,
   getID: () => string,

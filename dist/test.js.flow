@@ -5,7 +5,7 @@
  * @flow
  */
 
-import { ZalgoPromise } from "zalgo-promise";
+import { ZalgoPromise } from "zalgo-promise/src";
 declare type Prom<X> = Promise<X> | ZalgoPromise<X>;
 declare type Handler = <T, A: $ReadOnlyArray<mixed>>(
   name: string,
