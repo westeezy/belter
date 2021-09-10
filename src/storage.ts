@@ -90,8 +90,8 @@ export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE } : { name
 
                     if (!session) {
                         session = {
-                            guid:   uniqueID(),
-                            created:now
+                            guid:    uniqueID(),
+                            created: now
                         };
                     }
 

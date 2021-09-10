@@ -8,8 +8,8 @@ describe('submit form cases', () => {
             iframe.setAttribute('name', 'myiframe');
             getBody().appendChild(iframe);
             submitForm({
-                url:   '/base/test/windows/basic/index.htm',
-                target:'myiframe'
+                url:    '/base/test/windows/basic/index.htm',
+                target: 'myiframe'
             });
             window.addEventListener(
                 'message',

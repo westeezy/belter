@@ -5,8 +5,8 @@ describe('supportsPopups', () => {
         // @ts-ignore
         window.navigator.userAgent = 'anthonykhoa wants to work at paypal :D';
         Object.defineProperty(window, 'status', {
-            writable:true,
-            value:   {}
+            writable: true,
+            value:    {}
         });
     });
     it('should return false when isIosWebview function returns true', () => {

@@ -129,14 +129,14 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
         };
 
         promises.push({
-            name:   'wrapPromise handler',
-            promise:ZalgoPromise.try(() =>
+            name:    'wrapPromise handler',
+            promise: ZalgoPromise.try(() =>
                 method({
                     expect,
                     avoid,
                     expectError,
-                    error:avoid,
-                    wait: () => ZalgoPromise.resolve()
+                    error: avoid,
+                    wait:  () => ZalgoPromise.resolve()
                 }))
         });
         wait()

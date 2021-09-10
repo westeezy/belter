@@ -449,11 +449,11 @@ export function patchMethod(obj : Record<string, any>, name : string, handler : 
 
     obj[name] = function patchedMethod() : unknown {
         return handler({
-            context:     this,
-            args:        Array.prototype.slice.call(arguments),
+            context:      this,
+            args:         Array.prototype.slice.call(arguments),
             original,
             // @ts-ignore
-            callOriginal:() => original.apply(this, arguments)
+            callOriginal: () => original.apply(this, arguments)
         });
     };
 }
@@ -842,9 +842,9 @@ export function defineLazyProp<T>(
     }
 
     Object.defineProperty(obj, key, {
-        configurable:true,
-        enumerable:  true,
-        get:         () => {
+        configurable: true,
+        enumerable:   true,
+        get:          () => {
             // @ts-ignore
             delete obj[key];
             const value = getter();
@@ -989,11 +989,11 @@ export function regex(pattern : string | RegExp, string : string, start = 0) : R
     const index : number = result.index as number;
     const regmatch = result[0];
     return {
-        text:  regmatch,
-        groups:result.slice(1),
-        start: start + index,
-        end:   start + index + regmatch.length,
-        length:regmatch.length,
+        text:   regmatch,
+        groups: result.slice(1),
+        start:  start + index,
+        end:    start + index + regmatch.length,
+        length: regmatch.length,
 
         replace(text : string) : string {
             if (!regmatch) {

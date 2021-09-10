@@ -515,11 +515,11 @@ export function popup(url : string, options ?: PopupOptions) : CrossDomainWindow
             left,
             width,
             height,
-            status:    1,
-            toolbar:   0,
-            menubar:   0,
-            resizable: 1,
-            scrollbars:1,
+            status:     1,
+            toolbar:    0,
+            menubar:    0,
+            resizable:  1,
+            scrollbars: 1,
             ...options
         };
     }
@@ -739,16 +739,16 @@ export function iframe(
         ...attributes
     };
     const newStyle = {
-        backgroundColor:'transparent',
-        border:         'none',
+        backgroundColor: 'transparent',
+        border:          'none',
         ...style
     };
     // @ts-ignore - no 3rd argument for container supplied to createElement
     const frame = createElement('iframe', {
-        attributes:newAttributes,
-        style:     newStyle,
-        html:      options.html,
-        class:     options.class
+        attributes: newAttributes,
+        style:      newStyle,
+        html:       options.html,
+        class:      options.class
     });
     const isIE = window.navigator.userAgent.match(/MSIE|Edge/i);
 
@@ -1089,8 +1089,8 @@ export function onResize(
     let currentHeight = el.offsetHeight;
     let canceled = false;
     handler({
-        width: currentWidth,
-        height:currentHeight
+        width:  currentWidth,
+        height: currentHeight
     });
 
     const check = () => {
@@ -1103,8 +1103,8 @@ export function onResize(
 
         if ((width && newWidth !== currentWidth) || (height && newHeight !== currentHeight)) {
             handler({
-                width: newWidth,
-                height:newHeight
+                width:  newWidth,
+                height: newHeight
             });
         }
 
@@ -1127,10 +1127,10 @@ export function onResize(
         // @ts-ignore
         observer = new win.MutationObserver(check);
         observer.observe(el, {
-            attributes:   true,
-            childList:    true,
-            subtree:      true,
-            characterData:false
+            attributes:    true,
+            childList:     true,
+            subtree:       true,
+            characterData: false
         });
         timeout = safeInterval(check, interval * 10);
     } else {

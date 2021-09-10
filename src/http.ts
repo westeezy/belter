@@ -19,8 +19,8 @@ type ResponseType = {
     body : Record<string, any>;
 };
 const HEADERS = {
-    CONTENT_TYPE:'content-type',
-    ACCEPT:      'accept'
+    CONTENT_TYPE: 'content-type',
+    ACCEPT:       'accept'
 };
 const headerBuilders : Function[] = [];
 
@@ -110,9 +110,9 @@ export function request({
 
                 const res = {
                     // @ts-ignore no annotation for this
-                    status: this.status,
-                    headers:responseHeaders,
-                    body:   responseBody
+                    status:  this.status,
+                    headers: responseHeaders,
+                    body:    responseBody
                 };
                 return resolve(res);
             },

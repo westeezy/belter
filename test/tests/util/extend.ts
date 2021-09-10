@@ -3,14 +3,14 @@ import { extend } from '../../../src';
 describe('extend cases', () => {
     it('should add keys from one object to another', () => {
         const obj1 : Record<string, number> = {
-            foo:1,
-            bar:2,
-            baz:3
+            foo: 1,
+            bar: 2,
+            baz: 3
         };
         const obj2 : Record<string, number> = {
-            blep: 4,
-            blop: 5,
-            bloop:6
+            blep:  4,
+            blop:  5,
+            bloop: 6
         };
         extend(obj1, obj2);
 

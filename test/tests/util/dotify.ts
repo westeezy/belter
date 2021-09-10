@@ -3,10 +3,10 @@ import { dotify, undotify } from '../../../src';
 describe('dotify cases', () => {
     it('should dotify and undotify to give the same result', () => {
         const data = {
-            foo: 'bar',
-            baz: [ 1, 2, 3 ],
-            bing:[ 'aaa', 'bbb', 'ccc' ],
-            bong:[
+            foo:  'bar',
+            baz:  [ 1, 2, 3 ],
+            bing: [ 'aaa', 'bbb', 'ccc' ],
+            bong: [
                 {
                     a: 1
                 },
@@ -19,11 +19,11 @@ describe('dotify cases', () => {
             ],
             nested: {
                 obj: {
-                    blerf:'foobar',
-                    blorf:555
+                    blerf: 'foobar',
+                    blorf: 555
                 },
-                zorg:'zerg',
-                berk:'me,erk'
+                zorg: 'zerg',
+                berk: 'me,erk'
             }
         };
         const dotified = dotify(data);

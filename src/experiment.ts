@@ -43,9 +43,9 @@ function getThrottlePercentile(name : string) : number {
 }
 
 const THROTTLE_GROUP = {
-    TEST:    'test',
-    CONTROL: 'control',
-    THROTTLE:'throttle'
+    TEST:     'test',
+    CONTROL:  'control',
+    THROTTLE: 'throttle'
 };
 type ExperimentOptions = {
     name : string;

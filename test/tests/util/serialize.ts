@@ -17,10 +17,10 @@ describe('serialization cases', () => {
     });
     it('should base64 encode and decode JSON strings', () => {
         const data = JSON.stringify({
-            foo: 'bar',
-            baz: [ 1, 2, 3 ],
-            bing:[ 'aaa', 'bbb', 'ccc' ],
-            bong:[
+            foo:  'bar',
+            baz:  [ 1, 2, 3 ],
+            bing: [ 'aaa', 'bbb', 'ccc' ],
+            bong: [
                 {
                     a: 1
                 },
@@ -33,11 +33,11 @@ describe('serialization cases', () => {
             ],
             nested: {
                 obj: {
-                    blerf:'foobar',
-                    blorf:555
+                    blerf: 'foobar',
+                    blorf: 555
                 },
-                zorg:'zerg',
-                berk:'me,erk'
+                zorg: 'zerg',
+                berk: 'me,erk'
             }
         });
         encodedecode(data);
